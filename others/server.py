@@ -2,9 +2,9 @@
 import socket
 import threading
 
-HOST = '127.0.0.1'
-PORT = 1234 # You can use any port between 0 to 65535
-LISTENER_LIMIT = 5
+HOST = '192.168.56.1'
+PORT = 49670 # You can use any port between 0 to 65535
+LISTENER_LIMIT = 1
 active_clients = [] # List of all currently connected users
 
 # Function to listen for upcoming messages from a client
