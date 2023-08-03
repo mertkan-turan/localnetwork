@@ -5,7 +5,7 @@ def create_server(ip_address, port):
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    server.bind((ip_address, port))
+    server.bind((ip_address, int(port)))
 
     server.listen(100)
 
