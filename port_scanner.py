@@ -19,7 +19,8 @@ def scan_port(ip, port):
             print(f"Port {port} açık.")
         
         # Soketi kapatmayı unutmayın.
-        '#meraba'
+        '#merhabalar"
+        zeynep=stajyer
         sock.close()
         
 
