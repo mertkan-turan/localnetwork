@@ -22,3 +22,7 @@ def connection_handler(connection):
         message = connection.recv(1024).decode("utf-8")
         if message != "":
             print(f"Message is {message}")
+            
+            
+
+
