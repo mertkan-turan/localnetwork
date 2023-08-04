@@ -19,7 +19,9 @@ def scan_port(ip, port):
             print(f"Port {port} açık.")
         
         # Soketi kapatmayı unutmayın.
+        '#meraba'
         sock.close()
+        
 
     except socket.error:
         # Hata durumlarında (port kapalı veya hedef cihaza ulaşılamıyor) buraya düşer.
