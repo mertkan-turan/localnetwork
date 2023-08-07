@@ -27,11 +27,11 @@ class Server:
         return logger  
     
     def create_server(self):
-        socket.setdefaulttimeout(15)
+        socket.setdefaulttimeout(25)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((self.ip, int(self.port)))
-        self.server.listen(2)
+        self.server.listen(5)
         return self.server
 
     def server_serve(self):
@@ -45,19 +45,8 @@ class Server:
                     self.connection_handler(conn)
                     self.logging.info("Connection accepted: %s", addr)
                     self.connection_handler(conn)
-                   
-            except socket.timeout:
-                print("Connection is waiting.." +"(Timeout)")
-                self.logging.info("Connection is waiting.. (Timeout)")
-            except Exception as e:
-                print("Connection is waiting..", e) 
-                self.logging.error("Connection error: %s", e)
-            finally:
-                if conn:
-                    conn.close()
-                    print("Connection closed!")
-                    self.logging.info("Connection closed!")
-                    conn = None
+            except Exception as error:
+                print("Connection is waiting..", error) 
 
 
     def connection_handler(self,connection):
