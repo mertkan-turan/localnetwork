@@ -7,22 +7,30 @@ class Server:
        
     
     def create_server(self):
-        socket.setdefaulttimeout(15)
+        socket.setdefaulttimeout(35)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.server.bind(("10.34.7.129", int(self.port)))
+        self.server.bind(("localhost", int(self.port)))
         self.server.listen(2)
         return self.server
 
     def server_serve(self):
         while True:
+            conn = None
             try:
                 conn, addr = self.server.accept()
                 if conn:
                     print("Connection accepted:", addr)
                     self.connection_handler(conn)
-            except Exception as error:
-                print("Connection is waiting..", error) 
+            except socket.timeout:
+                print("Connection is waiting.." +"(Timeout)")
+            except Exception as e:
+                print("Connection is waiting..", e) 
+            finally:
+                if conn:
+                    conn.close()
+                    print("Connection closed!")
+                    conn = None
 
 
     def connection_handler(self,connection):
