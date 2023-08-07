@@ -1,4 +1,7 @@
 import socket
+import logging 
+
+logging.basicConfig(filename='my_log.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Client:
 
@@ -12,6 +15,7 @@ class Client:
         while True:
             message = input("Enter a message: ")
             self.client.sendall(message.encode())
+            logging.info(f"Message:{message}")
 
 if __name__ == "__main__":
     ip_address = "127.0.0.1"  # Example IP address
