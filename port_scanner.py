@@ -17,8 +17,7 @@ def scan_port(ip, port):
         if result == 0:
             print(f"Port {port} açık.")
         
-       # Do not forget to close the socket.
-      
+        
         sock.close()
         
 
