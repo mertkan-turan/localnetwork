@@ -8,6 +8,7 @@ class Client:
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
+
     def connect(self, ip_address, port):
         try:
             self.client.connect((ip_address, int(port)))
