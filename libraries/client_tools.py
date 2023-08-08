@@ -32,9 +32,6 @@ class Client:
                     continue
 
 
-
-
-
         except socket.timeout:
             messagebox.showerror("Connection is waiting...")
             self.client.close()
@@ -48,8 +45,3 @@ class Client:
         except Exception as e:
             print("Exception:", e)
             return False
-
-
-if __name__ == "__main__":
-    ip_address = "127.0.0.1"  # Example IP address
-    port = 12345  # Example port
