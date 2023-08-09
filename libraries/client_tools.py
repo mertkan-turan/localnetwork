@@ -27,7 +27,7 @@ class Client:
                         break
                     else:
                         continue
-                    break
+                    
                 else:
                     continue
 
