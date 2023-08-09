@@ -3,10 +3,10 @@ import logging
 
 class Server:
     
-    def __init__(self,port):
+    def __init__(self,port,username):
         self.hostname=socket.gethostname()   
-       
-        self.ip = "10.34.7.138" #socket.gethostbyname_ex(socket.gethostname())[-1]
+        self.username = username
+        self.ip = "192.168.68.238" #socket.gethostbyname_ex(socket.gethostname())[-1]
        # self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
         self.port = port
         self.connections = []
@@ -73,7 +73,8 @@ class Server:
 if __name__ == "__main__":
     ip_address = "10.34.7.129"  # Example IP address
     port = 12345  # Example port
+    username = ""
 
-    server = Server(port)
+    server = Server(port,username)
     server.create_server()
     server.server_serve()
