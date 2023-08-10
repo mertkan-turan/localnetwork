@@ -30,11 +30,11 @@ def write_configuration(file_path="settings.conf", ip="",port="",username="", ov
     
     
 def read_configuration(file_path = "settings.conf"):
-    """print(__file__)
-    print( __file__.split('\\'))
-    print( __file__.split('\\')[:-1])
-    print( "\\".join(__file__.split('\\')[:-1]))"""
     
+    #print(__file__)
+    #print( __file__.split('\\')) 
+    #print( __file__.split('\\')[:-1])
+    #print( "\\".join(__file__.split('\\')[:-1]))
     app_root_path = "/".join(__file__.split("\\")[:-1])
     
     with open(app_root_path + "/" + file_path, 'r') as json_file:
@@ -42,6 +42,7 @@ def read_configuration(file_path = "settings.conf"):
     
     return config
     
+
     
     
     

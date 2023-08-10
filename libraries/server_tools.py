@@ -6,7 +6,7 @@ class Server:
     def __init__(self,port,username):
         self.hostname=socket.gethostname()   
         self.username = username
-        self.ip = "192.168.68.238" #socket.gethostbyname_ex(socket.gethostname())[-1]
+        self.ip = "192.168.88.186" #socket.gethostbyname_ex(socket.gethostname())[-1]
        # self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
         self.port = port
         self.connections = []
