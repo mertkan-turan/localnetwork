@@ -5,9 +5,9 @@ class Server:
     
     def __init__(self,port,username):
         self.hostname=socket.gethostname()   
-        self.username = username
-        self.ip = "192.168.88.186" #socket.gethostbyname_ex(socket.gethostname())[-1]
-       # self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
+       
+        #self.ip = "" #socket.gethostbyname_ex(socket.gethostname())[-1]
+        self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
         self.port = port
         self.connections = []
         self.logging=self.setup_logger()
@@ -27,11 +27,13 @@ class Server:
         return logger  
     
     def create_server(self):
-        socket.setdefaulttimeout(15)
+
+        socket.setdefaulttimeout(25)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((self.ip, int(self.port)))
-        self.server.listen(2)
+        self.server.listen(5)
+
         return self.server
 
     def server_serve(self):
