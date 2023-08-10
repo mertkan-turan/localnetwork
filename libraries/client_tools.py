@@ -1,14 +1,6 @@
 import socket
-<<<<<<< HEAD
-import logging 
-
-logging.basicConfig(filename='my_log.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-=======
 import errno
-import tkinter as tk
-from tkinter import scrolledtext
-from tkinter import messagebox
->>>>>>> 73f9979 (Edit)
+
 
 class Client:
 
@@ -16,22 +8,6 @@ class Client:
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-<<<<<<< HEAD
-
-    def connect(self, ip_address, port):
-        self.client.connect((ip_address, int(port)))
-        while True:
-            message = input("Enter a message: ")
-            self.client.sendall(message.encode())
-            logging.info(f"Message:{message}")
-
-if __name__ == "__main__":
-    ip_address = "127.0.0.1"  # Example IP address
-    port = 12345  # Example port
-
-    client = Client()
-    client.connect(ip_address, port)
-=======
     def connect(self, ip_address, port):
         try:
             self.client.connect((ip_address, int(port)))
@@ -55,7 +31,7 @@ if __name__ == "__main__":
 
 
         except socket.timeout:
-            messagebox.showerror("Connection is waiting...")
+            print("Connection is waiting...")
             self.client.close()
         except socket.error as e:
             if e.errno == errno.ECONNREFUSED:
@@ -67,4 +43,3 @@ if __name__ == "__main__":
         except Exception as e:
             print("Exception:", e)
             return False
->>>>>>> 73f9979 (Edit)
