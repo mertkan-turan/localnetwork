@@ -1,6 +1,7 @@
 
 from pathlib import Path
 import json
+import logging
 from libraries import tools
 
 def main_actions():
@@ -17,7 +18,6 @@ def main_actions_client():
     
     tools.write_configuration(overwrite=False) 
     json_data = tools.read_configuration()
-        
     username = input(f"Enter Username [Old:{json_data['username']}]: ")
     if(username == ""):
         username = json_data['username']

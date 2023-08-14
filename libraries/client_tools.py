@@ -1,13 +1,15 @@
 import socket
 import errno
-
+import logging
 
 class Client:
 
-    def __init__(self):
+    def __init__(self,username):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
+        logging.basicConfig(filename='client_log.txt', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        self.logger = logging.getLogger()
+        self.username = username
     def connect(self, ip_address, port):
         try:
             self.client.connect((ip_address, int(port)))
@@ -16,7 +18,8 @@ class Client:
             while True:
 
                 message = input("Enter a message: ")
-                self.client.sendall(message.encode())
+                self.client.sendall(message.encode())              
+                self.logger.info("Sent by %s: %s",self.username, message)
                 if(message == "EXIT" or message == "Exit" or message == "exit"):
                     print("Are you sure you want to close the program? (Yes No)")
                     answer = input("Answer:")
