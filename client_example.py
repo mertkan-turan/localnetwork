@@ -7,7 +7,7 @@ from libraries import client_tools
 if __name__ == "__main__":
     ip, port, username = cli_tools.main_actions()
     json_data = tools.usage_info(ip,port,username)
-    client = client_tools.Client()
+    client = client_tools.Client(username)
     client.connect(ip, port)
 
     
