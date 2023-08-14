@@ -1,5 +1,4 @@
 # localnetwork
 Local Network Chit-Chat
 
-sdöafşsdöfşasöfşasdöşfasödifö
-asdhfhasdhfasdhfhashdfhasdhfhasdfh
+hello stranger
