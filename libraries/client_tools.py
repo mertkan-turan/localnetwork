@@ -1,6 +1,8 @@
 import socket
 import errno
 import logging
+from libraries.crypt import Crypto
+
 
 class Client:
 
@@ -10,15 +12,18 @@ class Client:
         logging.basicConfig(filename='client_log.txt', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
         self.logger = logging.getLogger()
         self.username = username
+        self.crypto_module = Crypto()
+        
     def connect(self, ip_address, port):
         try:
             self.client.connect((ip_address, int(port)))
             print("Successfully connected to server")
             print("If you want to exit program,please write exit!! ")
             while True:
-
-                message = input("Enter a message: ")
-                self.client.sendall(message.encode())              
+                message =  input("Enter a message: ")  
+                
+                encrypted_message = self.crypto_module.encrypt_message(message)
+                self.client.sendall(encrypted_message)             
                 self.logger.info("Sent by %s: %s",self.username, message)
                 if(message == "EXIT" or message == "Exit" or message == "exit"):
                     print("Are you sure you want to close the program? (Yes No)")
