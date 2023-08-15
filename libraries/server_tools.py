@@ -1,6 +1,6 @@
 import socket  
 import logging
-
+from libraries.crypt import Crypto
 class Server:
     
     def __init__(self,port,username):
@@ -11,6 +11,7 @@ class Server:
         self.port = port
         self.connections = []
         self.logging=self.setup_logger()
+        self.crypto_module = Crypto()
 
     def setup_logger(self):
         logger = logging.getLogger("ServerLogger")
@@ -64,9 +65,11 @@ class Server:
 
     def connection_handler(self,connection):
         while True:
-            message = connection.recv(1024).decode("utf-8")
-            if message != "":
-                print(f"Message is {message}")
+            encrypted_message = connection.recv(1024).decode("utf-8")
+            print(f"Message received: {encrypted_message}")
+            decrypted_message = self.crypto_module.decrypt_message(encrypted_message)
+            if decrypted_message != "":
+                print(f"Message is {decrypted_message}")
             
             
     def list_connections(self):
