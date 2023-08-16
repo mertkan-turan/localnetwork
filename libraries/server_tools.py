@@ -1,9 +1,13 @@
 import socket  
 import logging
 from libraries.crypt import Crypto
+import pickle
+from cryptography.fernet import Fernet
+
 class Server:
     
-    def __init__(self,port,username):
+        
+    def __init__(self,port,username, is_encrypted=False):
         self.hostname=socket.gethostname()   
        
         #self.ip = "" #socket.gethostbyname_ex(socket.gethostname())[-1]
@@ -11,8 +15,15 @@ class Server:
         self.port = port
         self.connections = []
         self.logging=self.setup_logger()
-        self.crypto_module = Crypto()
+        
+        self.is_encrypted = is_encrypted 
+        self.crypto_module = None
+        self.keycik = None
 
+        if self.is_encrypted:
+            self.crypto_module = Crypto()
+            self.keycik = self.crypto_module.create_key()
+            
     def setup_logger(self):
         logger = logging.getLogger("ServerLogger")
         logger.setLevel(logging.DEBUG)
@@ -29,7 +40,7 @@ class Server:
     
     def create_server(self):
 
-        socket.setdefaulttimeout(25)
+        socket.setdefaulttimeout(40)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((self.ip, int(self.port)))
@@ -44,42 +55,46 @@ class Server:
             try:
                 conn, addr = self.server.accept()
                 if conn:
-                    print("Connection accepted:", addr)
                     self.connection_handler(conn)
                     self.logging.info("Connection accepted: %s", addr)
-                    self.connection_handler(conn)
                    
             except socket.timeout:
-                print("Connection is waiting.." +"(Timeout)")
                 self.logging.info("Connection is waiting.. (Timeout)")
             except Exception as e:
-                print("Connection is waiting..", e) 
                 self.logging.error("Connection error: %s", e)
             finally:
                 if conn:
                     conn.close()
-                    print("Connection closed!")
                     self.logging.info("Connection closed!")
                     conn = None
 
 
-    def connection_handler(self,connection):
+    def connection_handler(self, connection):
+        if self.is_encrypted:
+            connection.sendall(self.keycik)  
         while True:
             encrypted_message = connection.recv(1024).decode("utf-8")
             print(f"Message received: {encrypted_message}")
-            decrypted_message = self.crypto_module.decrypt_message(encrypted_message)
-            if decrypted_message != "":
-                print(f"Message is {decrypted_message}")
+            decrypted_message = ""
+            if self.is_encrypted:
+                decrypted_message = self.crypto_module.decrypt_message(encrypted_message)
+                if decrypted_message != "":
+                    print(f"Decrypted message: {decrypted_message}")
+
             
             
     def list_connections(self):
         results = ''
         
 if __name__ == "__main__":
+
     ip_address = "10.34.7.129"  # Example IP address
     port = 12345  # Example port
     username = ""
-
-    server = Server(port,username)
+    is_encrypted = True
+    
+    server = Server(port,username,is_encrypted)
     server.create_server()
     server.server_serve()
+    
+    

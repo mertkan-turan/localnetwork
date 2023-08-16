@@ -2,7 +2,8 @@ import socket
 import errno
 import logging
 from libraries.crypt import Crypto
-
+import pickle
+from cryptography.fernet import Fernet
 
 class Client:
 
@@ -12,11 +13,15 @@ class Client:
         logging.basicConfig(filename='client_log.txt', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
         self.logger = logging.getLogger()
         self.username = username
+        self.key = None
         self.crypto_module = Crypto()
         
+ 
+    
     def connect(self, ip_address, port):
         try:
             self.client.connect((ip_address, int(port)))
+
             print("Successfully connected to server")
             print("If you want to exit program,please write exit!! ")
             while True:

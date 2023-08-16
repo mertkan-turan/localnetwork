@@ -6,9 +6,17 @@ from cryptography.fernet import Fernet
 
 class Crypto():
     def __init__(self):
-        self.key = self.get_key()
+        self.key = self.create_key()
         self.cipher_suite = self.get_cipher_suite()
   
+    def create_key(self):
+        key = Fernet.generate_key()
+        
+        with open("./key", "wb") as key_file:
+            pickle.dump(key,key_file)
+        
+        return key
+    
     def get_key(self):
         with open("./key", "rb") as key_file:
             key = pickle.load(key_file)
