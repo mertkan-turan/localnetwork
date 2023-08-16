@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 import logging
 from libraries import tools
-
+#Merhaba
 def main_actions():
     device_type = int(input("Is this device client [0] or server [1]:"))
     
