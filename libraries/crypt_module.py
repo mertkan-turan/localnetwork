@@ -1,5 +1,6 @@
 import pickle
 from cryptography.fernet import Fernet
+import threading
 
 # key = Fernet.generate_key()
 
@@ -48,6 +49,5 @@ class Crypto():
             raise Exception("No cipher suite created. Please create a cipher suite first.")
 
 
-
-
-
+if __name__ == "__main__" :
+      print(threading.active_count())

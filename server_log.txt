@@ -1,0 +1,313 @@
+2023-08-17 15:50:19,477 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 15:50:37,220 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 16:00:01,245 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 16:00:16,264 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:00:20,697 - INFO - Sending key...
+2023-08-17 16:00:20,776 - INFO - Key Received by client!
+2023-08-17 16:00:23,300 - INFO - Message received: gAAAAABk3hnn9XGEmg3QfnhAEUwMIyiLKAtb2q2zTcC8PVK6-7a85ACX2UICUNgNGo4lVRqfdnuWQYkadNyxucKIajZZGbiCWw==
+2023-08-17 16:00:32,861 - INFO - Decrypted message: asdfasdf
+2023-08-17 16:00:32,883 - INFO - Message received: gAAAAABk3hnoG1CNNYiucL5jh8DfsNH07ZoIffDJl5veKyOLfwuKF9QjFYoi8NR9Kb1LUyFa6gIvWnEMLhQUHcrhO6yzfKpxlQ==
+2023-08-17 16:00:32,994 - INFO - Decrypted message: asdfasfd
+2023-08-17 16:00:40,725 - ERROR - Connection error: ((10054, 'Varolan bir baðlantý uzaktaki bir ana bilgisayar tarafýndan zorla kapatýldý', None, 10054, None), '[WinError 10054] Varolan bir baðlantý uzaktaki bir ana bilgisayar tarafýndan zorla kapatýldý')
+2023-08-17 16:00:40,772 - INFO - Connection closed!
+2023-08-17 16:00:50,085 - INFO - Sending key...
+2023-08-17 16:00:50,212 - INFO - Key Received by client!
+2023-08-17 16:00:51,759 - INFO - Message received: gAAAAABk3hoDWepgnKwi31a1GMP6VL1b2b0Maba9iTzCAGcxOzHeHuCVQMEHH1RsKGIw3pmZkbLxwLpqRtJYcI3GiYiWx88vFg==
+2023-08-17 16:00:51,806 - INFO - Decrypted message: dasfasdfas
+2023-08-17 16:00:52,565 - INFO - Message received: gAAAAABk3hoEzx2uWc3N8he17Z78rUMb680BYp2QQAXjekeg2Xvrq-_N3UFxE1ue2cvImMbVJCTclIl3ThF-XeCkYcFqKEGyCg==
+2023-08-17 16:00:52,628 - INFO - Decrypted message: asdfasdfasd
+2023-08-17 16:01:07,661 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:01:07,693 - INFO - Connection closed!
+2023-08-17 16:01:07,756 - INFO - Sending key...
+2023-08-17 16:01:07,835 - INFO - Key Received by client!
+2023-08-17 16:01:10,457 - INFO - Message received: gAAAAABk3hoWih0IzeXa09lhMNmzTHkVuUfQXk_nwP-5m15p01eWlufhFTwbTpfag9FJCb4OGsfpAeCDjIVWtiSbKsMIgog1hw==
+2023-08-17 16:01:10,537 - INFO - Decrypted message: asdfasdf
+2023-08-17 16:01:20,705 - INFO - Message received: gAAAAABk3hogUSOg9gQi2YpzCm7QZ-AmDo3n8iZhEeKs9vdZXP7kDKSlaWYLBiTQGQbbnDozS67wtm5dWZLkXBKLnLD5ntoMOw==
+2023-08-17 16:01:20,753 - INFO - Decrypted message: asdfasdf
+2023-08-17 16:01:35,808 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:01:35,854 - INFO - Connection closed!
+2023-08-17 16:01:35,901 - INFO - Sending key...
+2023-08-17 16:01:35,996 - INFO - Key Received by client!
+2023-08-17 16:01:51,042 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:01:51,073 - INFO - Connection closed!
+2023-08-17 16:02:06,099 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:02:21,159 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:02:36,207 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:02:51,267 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:03:06,316 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:03:21,378 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:03:36,434 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:03:51,472 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:04:06,527 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:04:21,565 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:04:36,628 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:04:51,685 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:05:06,735 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:05:21,768 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:05:36,801 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:05:51,863 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:06:06,922 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:06:21,969 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:06:52,069 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 16:07:02,003 - INFO - Sending key...
+2023-08-17 16:07:02,019 - INFO - Connection accepted: ('10.34.7.141', 54789)
+2023-08-17 16:07:02,082 - INFO - Connection closed!
+2023-08-17 16:07:17,131 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:07:32,184 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:07:47,228 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:08:15,660 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 16:08:24,904 - INFO - Sending key...
+2023-08-17 16:08:24,920 - INFO - Connection accepted: ('10.34.7.141', 54805)
+2023-08-17 16:08:24,935 - INFO - Connection closed!
+2023-08-17 16:08:39,991 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:09:07,935 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 16:09:19,481 - INFO - Sending key...
+2023-08-17 16:09:19,607 - INFO - Key Received by client!
+2023-08-17 16:09:20,945 - INFO - Message received: gAAAAABk3hwAAOzKv7sLm4aFtwR74kUEogngrjJ0TL6wt3pzhAKX_yHS3XYprO4q6mawsaLPirmGJv8r5v8JKrLVuL0UkcoyFg==
+2023-08-17 16:09:31,483 - INFO - Decrypted message: asdfasdf
+2023-08-17 16:09:31,547 - INFO - Message received: gAAAAABk3hwAWCbONbpy0LgMYC025LpnEVsrOYfnLdYnbmX0M630LOMPhJWdk7t4I70NuK082ETH46_nCrqi7G1dgLXym3ti2g==gAAAAABk3hwBEX4KyVMxfgE8juF-dXkL4TEQoXaavfduVohsPO035kCL7RTUDg_87jFGJwoJo2xGjBwU0TIf49FI-PDyQTMinw==gAAAAABk3hwB_vcBv6YFM6HqnTwE7vanFPtnmbZgN22nkyvng3PBXEK3E0z2thbpeW13kwdyTMacNUQ63B9tGGaPA2NrVHpvrQ==gAAAAABk3hwBFcK10HLmurUn8pQ9RHlvwDp7n5fZCnqzwYKsyqvIwXUUK_y8nXctu9e3h8RYz-mxPCzsr0y7GephLlVAqQuTWA==gAAAAABk3hwBavYz0Yn65UNPiAKQTvQaXfmhKMHA3PaxTuJvNLzULYISbCFApdRKU9l8Ub56_gptobht4B57uyGKSRjkWvabxw==gAAAAABk3hwBiKPLju81Al1IbI-vW21txWumpxqZfvxqnjG4gd0b3sQBanaMSZ-3CCtwbIXhJQNruLoV3sB3FiVViOx9-B0UVw==gAAAAABk3hwFDWNRIj4D4BrkFFnV6I2_KAgbxpKoT9r90cVLiOOagQ-GYA_ISeKaYCuuMsYmzVoV7IpgfWgVz7ldpbejOFSlnA==gAAAAABk3hwGGvAs2svYS7Pica9S_QTJKb3Koa88I3G2GOSBINdqVODPFtgXg2rrTpCM_wsDBO45e1P_POQtsD94LaZVsKjhwQ==
+2023-08-17 16:09:31,594 - INFO - Decrypted message: asdf
+2023-08-17 16:09:46,656 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:09:46,704 - INFO - Connection closed!
+2023-08-17 16:10:01,766 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:10:03,694 - INFO - Sending key...
+2023-08-17 16:10:03,806 - INFO - Key Received by client!
+2023-08-17 16:10:05,857 - INFO - Message received: gAAAAABk3hwt9TdHc0_NAH6UDJ1owbo3LVYzw4GX51e0XvkKlWqjygp_YdW3LPxBs4kSvDSy9KEyImgyTn3kONiCYJ7WFLJBTw==
+2023-08-17 16:10:05,873 - INFO - Decrypted message: merhaba
+2023-08-17 16:10:07,816 - INFO - Message received: gAAAAABk3hwvp3n6kuk3DQpt2hUo-ifBVjDIw3NsZj_t0LbkN6LQeaVJi1aszJjPxXkQg8pFIvUQt2f8fbcYVAWChIngIt7gFA==
+2023-08-17 16:10:07,864 - INFO - Decrypted message: ssss
+2023-08-17 16:10:09,936 - INFO - Message received: gAAAAABk3hwxsjA7lf9LWkmBmdKXnB3HQLUlP3sG9mru19L0bmpuhYEiuO7WpsekWsNh2irtxQ7Cs2OV_aIUPuTpZaSGqvXTtQ==
+2023-08-17 16:10:09,970 - INFO - Decrypted message: yein
+2023-08-17 16:10:11,140 - INFO - Message received: gAAAAABk3hwzYezqoK9aB6RFOsK54E9e2O76SZTNw26CYpwkUf_2zwMdLX8S6LqZTc0H5VvwAw2m70zYHl0_mIWZNr5q3_m8LQ==
+2023-08-17 16:10:11,204 - INFO - Decrypted message: gel
+2023-08-17 16:10:12,221 - INFO - Message received: gAAAAABk3hw0dbVHClMT1oBeY1GVptHeu8yJOtEqM06sHHW5JOBtNwSRzV0opcJ4HTt4IChK30sxI0mL5t-s0lP7oax94ZDWmw==
+2023-08-17 16:10:12,269 - INFO - Decrypted message: git
+2023-08-17 16:10:15,875 - INFO - Message received: gAAAAABk3hw374CCLOfRL0kRe3BS_T4CKPftbnxyoNfiRyyNUy3t_3T5BHDGZsh18Wd-2oDK0a-vP11BaNHRu8msp9IXwRF5TA==
+2023-08-17 16:10:15,954 - INFO - Decrypted message: zxc
+2023-08-17 16:10:17,213 - INFO - Message received: gAAAAABk3hw5gcUxy9hWarq3chkKXGuGxvnORUOXTtoRnSftk1rZNDCwsU9EGScD8u--Lp4r9P0F_aAXyaKpr6G0qG78za02OA==
+2023-08-17 16:10:17,277 - INFO - Decrypted message: zxc
+2023-08-17 16:10:18,616 - INFO - Message received: gAAAAABk3hw60HFOP5dlP_K76NUUCtq1JT3I83msL86UskUz9-uwW7K8RCeLVxMqXSjIVSGXGt4-s1kJhynCIqjcrEzX1wdAoA==
+2023-08-17 16:10:18,649 - INFO - Decrypted message: zxc
+2023-08-17 16:10:19,956 - INFO - Message received: gAAAAABk3hw7LK1BgeWE15sceO6Rqcv_Ykg__jr0pDvYaxCayB3Ia5pVrgCpeUCzHr8B1Ft2kFixuhBNia3ZbSIF_zv5seafaA==
+2023-08-17 16:10:19,989 - INFO - Decrypted message: zsd
+2023-08-17 16:10:21,530 - INFO - Message received: gAAAAABk3hw9Fyw1zBl_58H9MtyFsspn37ILIj3CIFDqCHPR5I5b9v10aQ1jeD7YzZpmnMyPnrySzHIW3sxr5mYwCt3SFHk_Og==
+2023-08-17 16:10:21,562 - INFO - Decrypted message: aaaa
+2023-08-17 16:10:36,624 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:10:36,656 - INFO - Connection closed!
+2023-08-17 16:10:51,713 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:11:06,752 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:11:21,804 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:11:36,858 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:11:51,898 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:12:06,956 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:12:21,994 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:12:37,033 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:12:52,073 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:13:07,123 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:13:22,164 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:13:37,217 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:13:52,267 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:14:07,319 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:14:22,357 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:14:37,413 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:14:52,459 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:15:07,496 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:15:22,542 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:15:37,579 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:15:52,626 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:16:07,682 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:16:22,741 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:16:37,803 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:16:52,853 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:17:07,916 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:17:22,965 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:17:38,002 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:17:57,304 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 16:18:07,467 - INFO - Sending key...
+2023-08-17 16:18:07,545 - INFO - Key Received by client!
+2023-08-17 16:18:08,900 - INFO - Message received: gAAAAABk3h4Qw4o-CF-dqMCii1ioCMUerM5_7D1P4PHgyDjdfLrGCC48kDDK_gCpGB4lH28ufl_66fzEzMlavnTbOPf4ahlRwg==
+2023-08-17 16:18:19,655 - INFO - Decrypted message: sdafsfd
+2023-08-17 16:18:19,685 - INFO - Message received: gAAAAABk3h4RaxMDn4OLLSfD77ermUsaCsY_awnaOtsZmaBpKYa0YgL_y81eYt9mSJugIrybw5cMVuMrZL-cPMsyGGouzhndZA==gAAAAABk3h4aO3MPZLrWh493kVRprR1cdxd1cJn8BLk3V9uM46cGWfjHw7DqR5k5jElhl8vgq1YBpTtHqMGB6WHycfgfijeQmg==
+2023-08-17 16:18:19,763 - INFO - Decrypted message: asdfasfd
+2023-08-17 16:18:33,729 - INFO - Message received: gAAAAABk3h4pXn37xSs-pM5cjtm_bOaU6E47cfMq7yJXSLifci-7xCxYTD0O1BMzoxvR2zN3uYjQZOJ099hgZNEGUMecoBqhBg==
+2023-08-17 16:18:33,808 - INFO - Decrypted message: merhaba
+2023-08-17 16:18:37,822 - INFO - Message received: gAAAAABk3h4t5s3xlcd_BDzRvGQUyHhvzFDaPAH8xtxkXCH1K05DlKKJLVyB6mgVymvXhh4RQKr5y3ZCsbvD1Yh4VwSuXdTlkw==
+2023-08-17 16:18:37,867 - INFO - Decrypted message: clie
+2023-08-17 16:18:52,915 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:18:52,948 - INFO - Connection closed!
+2023-08-17 16:18:52,951 - INFO - Sending key...
+2023-08-17 16:18:53,058 - INFO - Key Received by client!
+2023-08-17 16:18:56,598 - INFO - Message received: gAAAAABk3h5AMyW0VuNrxwZg4w9MZnTpLhtnO0Uo2eeo1kDa3X2sKiCpXyc1EWM1sgFgROxrRNZqSFhjTYlbxlx-2xqT5OPvtQ==
+2023-08-17 16:18:56,631 - INFO - Decrypted message: sadfasdf
+2023-08-17 16:19:11,680 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:19:11,711 - INFO - Connection closed!
+2023-08-17 16:19:26,771 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:19:41,825 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:19:56,871 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:20:11,932 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:20:26,986 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:20:42,022 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:20:57,065 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:21:12,122 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:21:27,179 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:21:42,224 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:21:57,285 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:22:12,339 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:22:27,372 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:22:42,416 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:22:57,459 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:23:12,509 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:23:27,553 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:23:42,609 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:23:57,652 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:24:12,701 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:24:27,759 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:24:42,794 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:24:57,834 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:25:12,883 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:25:27,937 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:25:42,991 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:25:58,045 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:26:13,093 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:26:23,707 - INFO - Sending key...
+2023-08-17 16:26:23,785 - INFO - Key Received by client!
+2023-08-17 16:26:25,988 - INFO - Message received: gAAAAABk3iAB8ir9ZsdcK5K5cUeYUTTOucIzyGtRG-nfRm4J5seiBKgCirYCEZbbdDKYwTZDDIdGt2Q-EoLmG3qKBN0SVO7zNA==
+2023-08-17 16:26:26,035 - INFO - Decrypted message: asdfsdfasdf
+2023-08-17 16:26:41,083 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:26:41,130 - INFO - Connection closed!
+2023-08-17 16:26:41,192 - INFO - Sending key...
+2023-08-17 16:26:41,238 - INFO - Key Received by client!
+2023-08-17 16:26:56,290 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:26:56,337 - INFO - Connection closed!
+2023-08-17 16:27:11,396 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:27:26,451 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:27:41,513 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:27:56,568 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:28:11,622 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:28:26,671 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:28:41,731 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:28:56,790 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:29:11,842 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:29:34,631 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 16:29:49,649 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:30:04,709 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:30:19,762 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:30:49,023 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 16:31:04,043 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:31:19,100 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:31:34,155 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:31:49,214 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:32:25,418 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 16:32:35,943 - INFO - Sending key...
+2023-08-17 16:32:36,053 - INFO - Key Received by client!
+2023-08-17 16:32:38,111 - INFO - Message received: gAAAAABk3iF1hNP1srWuOS9xq-V3VdXaWAKFmXLjguY6f-_HKUwvJd54JfU3AyjHhQrNsf0tbF7Eqm8fNcYyRqz2mbDaFDvPvA==
+2023-08-17 16:32:46,834 - INFO - Decrypted message: adfasdf
+2023-08-17 16:32:46,882 - INFO - Message received: gAAAAABk3iF3NjZXEU9ijZxDSodbCE68KTFjJQ7qo3NEYD2AShvc4HCpEqdqu-Aeh4KpGdcTDI8RWmhyQWReh4WeMtSsbFuOrg==
+2023-08-17 16:32:46,915 - INFO - Decrypted message: sss
+2023-08-17 16:33:01,970 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:33:02,016 - INFO - Connection closed!
+2023-08-17 16:33:17,059 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:33:32,119 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:33:47,178 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:34:02,240 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:34:17,290 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:34:32,350 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:34:47,400 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:34:59,734 - INFO - Sending key...
+2023-08-17 16:34:59,858 - INFO - Key Received by client!
+2023-08-17 16:35:03,552 - INFO - Message received: gAAAAABk3iIH8O8VrKKTJ-XJbzDS89btlzHSdt0zB7U3VQbefc-Wg7fCQf690K6I9HJy3gb8o6AXHXQgTWlkIWkrrqGBgvqGZQ==
+2023-08-17 16:35:03,614 - INFO - Decrypted message: dfsdf
+2023-08-17 16:35:04,413 - INFO - Message received: gAAAAABk3iIIrogQ-ITbL7Wn4S1N-FgTGZDjD-4aZKsGBac_7Q4p9ioXCQD_Rb_GsjJEnVN-BdLhyVGnxJr9mFoB_k9xOZDnFg==
+2023-08-17 16:35:04,445 - INFO - Decrypted message: asdfsd
+2023-08-17 16:35:19,503 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:35:19,551 - INFO - Connection closed!
+2023-08-17 16:35:34,611 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:35:49,669 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:36:04,731 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:36:19,784 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:36:34,841 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:36:49,904 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:37:04,958 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:37:20,006 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:37:35,052 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:37:50,106 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:38:05,157 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:38:07,826 - INFO - Sending key...
+2023-08-17 16:38:07,936 - INFO - Key Received by client!
+2023-08-17 16:38:20,647 - INFO - Message received: gAAAAABk3iLMqFYVSfvRGHnE1SIupUy1hRHTe--5dMxozud65ylGE9m2Xm4sAkMCCk6Oyji9uEjoiG7DS8zFCEMiHcLJho03cQ==
+2023-08-17 16:38:20,710 - INFO - Decrypted message: asdasdas
+2023-08-17 16:38:35,761 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:38:35,809 - INFO - Connection closed!
+2023-08-17 16:38:35,872 - INFO - Sending key...
+2023-08-17 16:38:35,919 - INFO - Key Received by client!
+2023-08-17 16:38:50,959 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:38:51,006 - INFO - Connection closed!
+2023-08-17 16:39:06,068 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:39:21,122 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:39:36,181 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:39:51,241 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:40:06,300 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:40:21,359 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:40:36,417 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:40:51,462 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:41:06,511 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:41:06,932 - INFO - Sending key...
+2023-08-17 16:41:07,042 - INFO - Key Received by client!
+2023-08-17 16:41:13,050 - INFO - Message received: gAAAAABk3iN4Za3-ysl40OVJTP_d19X7vsBo6jumyy4zX5yOw6MK2buRhnBbioYPiwXfampBfXBVjDqXWAnO0fI57cxfot09yw==
+2023-08-17 16:41:13,097 - INFO - Decrypted message: asdasd
+2023-08-17 16:41:28,146 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:41:28,193 - INFO - Connection closed!
+2023-08-17 16:41:28,239 - INFO - Sending key...
+2023-08-17 16:41:28,333 - INFO - Key Received by client!
+2023-08-17 16:41:43,384 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:41:43,431 - INFO - Connection closed!
+2023-08-17 16:41:58,483 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:42:13,538 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:42:28,593 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:42:43,654 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:42:58,707 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:43:13,761 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:43:28,813 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:43:43,865 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:43:58,912 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:44:13,967 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:44:29,016 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:44:44,070 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:44:59,127 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:45:14,185 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:45:29,244 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:45:44,291 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:45:59,342 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:46:04,867 - INFO - Sending key...
+2023-08-17 16:46:04,975 - INFO - Key Received by client!
+2023-08-17 16:46:11,104 - INFO - Message received: gAAAAABk3iSiJh0HIJLoIad4SNrkcxTR5Pm98RmflxjOPPiVdGhXcqk-Dv97Z36ZL3KUYDWaBg_V3lb6hmlB6G96wEppb1rq4Q==
+2023-08-17 16:46:11,135 - INFO - Decrypted message: dddd
+2023-08-17 16:46:26,187 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:46:26,234 - INFO - Connection closed!
+2023-08-17 16:46:26,297 - INFO - Sending key...
+2023-08-17 16:46:26,392 - INFO - Key Received by client!
+2023-08-17 16:46:41,447 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:46:41,493 - INFO - Connection closed!
+2023-08-17 16:46:56,555 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:47:11,590 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:47:26,645 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:47:41,684 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:47:56,744 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:48:11,783 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:48:26,834 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:48:40,146 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 16:48:54,887 - INFO - Sending key...
+2023-08-17 16:48:54,903 - INFO - Connection accepted: ('10.34.7.141', 3032)
+2023-08-17 16:48:54,994 - INFO - Connection closed!
+2023-08-17 16:49:10,066 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:49:25,127 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:49:40,183 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:49:55,247 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:50:10,285 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:50:29,496 - INFO - Server IP Address: 10.34.7.141
+2023-08-17 16:50:41,322 - INFO - Connection accepted: ('10.34.7.141', 29010)
+2023-08-17 16:50:41,371 - INFO - Connection closed!
+2023-08-17 16:50:56,455 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:51:11,496 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 16:51:26,546 - WARNING - Connection is waiting.. (Timeout)
+2023-08-17 18:48:47,475 - WARNING - Connection is waiting.. (Timeout)
