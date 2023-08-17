@@ -12,7 +12,7 @@ class Client:
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #self.client.setblocking(False)
         self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        logging.basicConfig(filename='client_log.txt', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        logging.basicConfig(filename='client_log.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
         
         self.logger = logging.getLogger()
         
@@ -20,11 +20,28 @@ class Client:
         self.keycik = None
         self.crypto_module = Crypto()
         
- 
+    def setup_logger(self):
+        logger = logging.getLogger("ClientLogger")
+        logger.setLevel(logging.DEBUG)
+        
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        
+        file_handler = logging.FileHandler('client_log.txt')
+        file_handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(formatter)
+        
+        console_handler = logging.StreamHandler()  
+        console_handler.setLevel(logging.DEBUG)  
+        console_handler.setFormatter(formatter)
+        
+        logger.addHandler(file_handler)
+        logger.addHandler(console_handler)  
+        
+        return logger
     
     def connect(self, ip_address, port):
         try:
-            print("Connecting to server:", ip_address, ":", port)
+            self.logger.info("Connecting to server: %s:%s", ip_address, port)
             self.client.connect((ip_address, int(port)))
             #if self.keycik is None: 
             #    self.keycik = self.client.recv(1024)
@@ -81,15 +98,15 @@ class Client:
 
 
         except socket.timeout:
-            print("Connection is waiting...")
+            self.logger.warning("Connection is waiting...")
             self.client.close()
         except socket.error as e:
             if e.errno == errno.ECONNREFUSED:
-                print("Connection Refused.")
+                self.logger.error("Connection Refused.")
             else:
-                print("Socket error.", e)
-                print("Error message:", e.strerror)
+                self.logger.error("Socket error: %s", e)
+                self.logger.error("Error message: %s", e.strerror)
             return False
         except Exception as e:
-            print("Exception:", e)
+            self.logger.error("Exception: %s", e)
             return False
