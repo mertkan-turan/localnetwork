@@ -11,7 +11,7 @@ class Server:
        
         #self.ip = "" #socket.gethostbyname_ex(socket.gethostname())[-1]
         self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
-        self.ip = "10.34.7.141"
+        self.ip = "localhost"
         self.port = port
         self.connections = []
         self.logging=self.setup_logger()
@@ -25,7 +25,6 @@ class Server:
             self.crypto_module = Crypto()
             self.keycik = self.crypto_module.create_key()
             self.crypto_module.create_cipher_suite()
-            print("Key Length: ", len(self.keycik))
             
     def setup_logger(self):
         logger = logging.getLogger("ServerLogger")
@@ -49,7 +48,7 @@ class Server:
     
     def create_server(self):
 
-        socket.setdefaulttimeout(15)
+        #socket.setdefaulttimeout(50)
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind((self.ip, int(self.port)))
@@ -60,6 +59,7 @@ class Server:
     
     def accept_connections(self):
 
+        # TODO: Fix
         list2 = list()
         while True:
             
@@ -72,7 +72,12 @@ class Server:
                     self.clients.append(conn)  # Store the new client socket
                   #  self.lock.release()  # Release the lock
                     #self.connection_handler(conn)
-                    list2.append( threading.Thread(target=self.connection_handler, args=(conn)))  # Start a new thread for the connection
+                    list2.append( 
+                        threading.Thread(
+                            target=self.connection_handler, 
+                            args=(conn,)
+                        )
+                    )  # Start a new thread for the connection
                     list2[-1].start()
                     self.logging.info(f"Connection accepted: {addr}")
                     
@@ -80,12 +85,15 @@ class Server:
                 self.logging.warn("Connection is waiting.. (Timeout)")
             except Exception as e:
                 self.logging.error(f"Connection error: {e.args, e.__str__()}")
-            finally:
+            #finally:
+                """
+                # TODO: Fix
                 if conn:
                     conn.close()
                     self.clients.remove(conn)  # Remove the disconnected client socket
                     self.logging.info("Connection closed!")
                     conn = None
+                """
         
     def server_serve(self):
         self.logging.info(f"Server IP Address: {self.ip}")
@@ -93,9 +101,11 @@ class Server:
         accept_thread.daemon = True
         accept_thread.start()
        
+        # TODO: Fix
         while(True):
             pass
 
+    # TODO: Fix
     def broadcast_message(self, sender, message):
         for client in self.clients:
             if client != sender:
@@ -105,6 +115,7 @@ class Server:
                     self.logging.error(f"Error broadcasting message: {e.args, e.__str__()}")
                     
     def connection_handler(self, connection):
+        # TODO: Fix
         if self.is_encrypted and self.keycik:
             key_pattern = "!KEY:"
             is_key_transmitted = False
@@ -120,7 +131,7 @@ class Server:
             # connection.sendall(key_pattern.encode() + self.keycik)
         
         while True:
-            encrypted_message = connection.recv(1024).decode("utf-8")
+            encrypted_message = connection.recv(1024).decode('utf-8')
             self.logging.info(f"Message received: {encrypted_message}")
             
             if self.is_encrypted and self.crypto_module:

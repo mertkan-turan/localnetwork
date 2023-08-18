@@ -17,6 +17,8 @@ class Client:
         self.logger = logging.getLogger()
         
         self.username = username
+
+        # TODO: Fix
         self.keycik = None
         self.crypto_module = Crypto()
         
@@ -47,6 +49,7 @@ class Client:
             #    self.keycik = self.client.recv(1024)
             print("Key transmission started...")
             
+            # TODO: Fix
             start_time = time.time()
             key = ""
             key_received = False
@@ -68,7 +71,7 @@ class Client:
                             print("Key received:", key.decode())
                             key_received = True
                             self.client.sendall(key_pattern.encode())
-                            print("Key received information sent to server:")
+                            print("Key received information sent to server:", ip_address)
                             break
             
             self.crypto_module.set_key(key)
@@ -84,6 +87,7 @@ class Client:
                 
                 print(f"Sent by {self.username}:{message}")
                 
+                # TODO: Fix
                 if(message == "EXIT" or message == "Exit" or message == "exit"):
                     print("Are you sure you want to close the program? (Yes No)")
                     answer = input("Answer:")

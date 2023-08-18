@@ -2,4 +2,4 @@ __*
 venv*
 *.log
 *.txt
-.conf
+*.conf
