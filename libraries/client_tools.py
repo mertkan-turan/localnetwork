@@ -19,7 +19,7 @@ class Client:
         self.username = username
 
         # TODO: Fix
-        self.keycik = None
+        self.switch = None
         self.crypto_module = Crypto()
         
     def setup_logger(self):
@@ -45,8 +45,8 @@ class Client:
         try:
             self.logger.info("Connecting to server: %s:%s", ip_address, port)
             self.client.connect((ip_address, int(port)))
-            #if self.keycik is None: 
-            #    self.keycik = self.client.recv(1024)
+            #if self.switch is None: 
+            #    self.switch = self.client.recv(1024)
             print("Key transmission started...")
             
             # TODO: Fix

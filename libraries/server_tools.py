@@ -3,7 +3,7 @@ import logging
 import sys
 from libraries.crypt_module import Crypto
 import threading
-
+import time
 
 class Server:
     def __init__(self,port,username, is_encrypted=False):
@@ -11,19 +11,21 @@ class Server:
        
         #self.ip = "" #socket.gethostbyname_ex(socket.gethostname())[-1]
         self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
-        self.ip = "localhost"
+        self.ip = "10.34.7.141"
         self.port = port
         self.connections = []
         self.logging=self.setup_logger()
-        
+        self.stop_event = threading.Event()  # Initialize stop_event
         self.is_encrypted = is_encrypted 
         self.crypto_module = None
-        self.keycik = None
+        self.username = username
+        self.switch = None
         self.clients = []  # List to store connected client sockets
+        self.message_processing_mode = True
         self.lock = threading.Lock()  # Lock for managing shared data
         if self.is_encrypted:
             self.crypto_module = Crypto()
-            self.keycik = self.crypto_module.create_key()
+            self.switch = self.crypto_module.create_key()
             self.crypto_module.create_cipher_suite()
             
     def setup_logger(self):
@@ -59,8 +61,8 @@ class Server:
     
     def accept_connections(self):
 
-        # TODO: Fix
-        list2 = list()
+        active_connections = {} 
+        
         while True:
             
             conn = None
@@ -68,42 +70,57 @@ class Server:
                 conn, addr = self.server.accept()
                 print("connnection accepted :" , conn , addr)
                 if conn:
-                   # self.lock.acquire()  # Acquire the lock before modifying shared data
-                    self.clients.append(conn)  # Store the new client socket
-                  #  self.lock.release()  # Release the lock
-                    #self.connection_handler(conn)
-                    list2.append( 
-                        threading.Thread(
-                            target=self.connection_handler, 
-                            args=(conn,)
-                        )
-                    )  # Start a new thread for the connection
-                    list2[-1].start()
+                    username = conn.recv(1024).decode('utf-8')  # Receive username from client
+                    self.clients.append((conn, username))  # Store the new client socket
+                    connection_thread = threading.Thread(
+                        target=self.connection_handler,
+                        args=(conn,username)
+                    )
+                    connection_thread.start()
+                    active_connections[conn] = connection_thread  # Store the connection and its thread
                     self.logging.info(f"Connection accepted: {addr}")
                     
             except socket.timeout:
                 self.logging.warn("Connection is waiting.. (Timeout)")
             except Exception as e:
                 self.logging.error(f"Connection error: {e.args, e.__str__()}")
-            #finally:
-                """
-                # TODO: Fix
-                if conn:
-                    conn.close()
-                    self.clients.remove(conn)  # Remove the disconnected client socket
+            
+            # Clean  disconnected connections and their threads
+            for conn, thread in active_connections.items():
+                if not thread.is_alive():
+                    del active_connections[conn]
+                    self.remove_client(conn)  # Call a method to handle client removal
+                    #self.clients.remove(conn)  # Remove the disconnected client socket
                     self.logging.info("Connection closed!")
-                    conn = None
-                """
-        
+    
+    def remove_client(self, conn):
+        for client in self.clients:
+            if client[0] == conn:
+                self.clients.remove(client)
+                break
+    
+    def stop_server(self):
+        self.server.close()
+        self.logging.info("Server stopped.")
+                          
+                             
     def server_serve(self):
         self.logging.info(f"Server IP Address: {self.ip}")
         accept_thread = threading.Thread(target=self.accept_connections)
         accept_thread.daemon = True
         accept_thread.start()
        
-        # TODO: Fix
-        while(True):
-            pass
+        try:
+            while not self.stop_event.is_set():
+                
+                # Example: Print a message every 8 seconds
+                self.logging.debug("Server is running...")
+                time.sleep(15)
+                
+        except KeyboardInterrupt:
+                self.stop_event.set()
+                self.logging.info("Server shutting down due to user interruption.")
+                self.stop_server()
 
     # TODO: Fix
     def broadcast_message(self, sender, message):
@@ -113,32 +130,44 @@ class Server:
                     client.send(message.encode())
                 except Exception as e:
                     self.logging.error(f"Error broadcasting message: {e.args, e.__str__()}")
-                    
-    def connection_handler(self, connection):
-        # TODO: Fix
-        if self.is_encrypted and self.keycik:
-            key_pattern = "!KEY:"
-            is_key_transmitted = False
-            while not is_key_transmitted:
-                self.logging.info("Sending key...")
-                connection.send(key_pattern.encode())  
-                connection.send(self.keycik)
-                key_message = connection.recv(1024)
+    
+    
+    def decrypted_message(self, connection,username, encrypted_message):
+ 
+        decrypted_message = ""        
+        self.logging.info(f"Message received by {username} : {encrypted_message}")
+        if self.is_encrypted and self.crypto_module:
+            decrypted_message = self.crypto_module.decrypt_message(encrypted_message)
+            if decrypted_message != "":
+                self.logging.info(f"Decrypted message by {username} : {decrypted_message}")
+                self.broadcast_message(connection, decrypted_message)  # Broadcast to other clients   
                 
-                if key_message.decode() == "KEY_RECEIVED":
-                    is_key_transmitted = True
-                    self.logging.info("Key Received by client!")
-            # connection.sendall(key_pattern.encode() + self.keycik)
+    def send_key(self, connection):
+        key_pattern = "!KEY:"
+        is_key_transmitted = False
+        while not is_key_transmitted:
+            self.logging.info("Sending key...")
+            connection.send(key_pattern.encode())
+            connection.send(self.switch)
+            key_message = connection.recv(1024)
+
+            if key_message.decode() == "KEY_RECEIVED":
+                is_key_transmitted = True
+                self.logging.info("Key Received by client!")
+                        
+    def connection_handler(self, connection,username):
+        self.send_key(connection)
+      
+            # connection.sendall(key_pattern.encode() + self.switch)
         
         while True:
-            encrypted_message = connection.recv(1024).decode('utf-8')
-            self.logging.info(f"Message received: {encrypted_message}")
-            
-            if self.is_encrypted and self.crypto_module:
-                decrypted_message = self.crypto_module.decrypt_message(encrypted_message)
-                if decrypted_message != "":
-                    self.logging.info(f"Decrypted message: {decrypted_message}")
-                    self.broadcast_message(connection, decrypted_message)  # Broadcast to other clients
+                encrypted_message = connection.recv(1024).decode('utf-8')
+                if encrypted_message:
+                    self.decrypted_message(connection,username, encrypted_message)
+                  
+                continue
+               
+                    
         
 if __name__ == "__main__":
     
