@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 import logging
 from libraries import tools
-
+#Merhaba
 def main_actions():
     device_type = int(input("Is this device client [0] or server [1]:"))
     
@@ -21,10 +21,10 @@ def main_actions_client():
     username = input(f"Enter Username [Old:{json_data['username']}]: ")
     if(username == ""):
         username = json_data['username']
-    server_ip = input("Enter IP:")
+    server_ip = input(f"Enter IP [Old:{json_data['ip']}]: ")
     if(server_ip == ""):
         server_ip = json_data['ip']
-    port = input("Enter Port:")
+    port = input(f"Enter Port [Old:{json_data['port']}]: ")
     if(port == ""):
         port = json_data['port']
         
@@ -36,6 +36,7 @@ def main_actions_server():
     username = input("Enter Username: ")
     port = input("Enter Port:")
     ip = ""
+    
 
     return ip, port, username
 
