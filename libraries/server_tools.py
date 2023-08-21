@@ -78,6 +78,14 @@ class Server:
                     )
                     connection_thread.start()
                     active_connections[conn] = connection_thread  # Store the connection and its thread
+                    username = conn.recv(1024).decode('utf-8')  # Receive username from client
+                    self.clients.append((conn, username))  # Store the new client socket
+                    connection_thread = threading.Thread(
+                        target=self.connection_handler,
+                        args=(conn,username)
+                    )
+                    connection_thread.start()
+                    active_connections[conn] = connection_thread  # Store the connection and its thread
                     self.logging.info(f"Connection accepted: {addr}")
                     
             except socket.timeout:
