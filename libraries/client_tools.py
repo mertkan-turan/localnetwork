@@ -4,23 +4,28 @@ import logging
 import threading
 import time
 from libraries.crypt_module import Crypto
+import threading
 import pickle
 from cryptography.fernet import Fernet
 
+
+logging.basicConfig(filename='client_log.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger()
 class Client:
 
     def __init__(self,username):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         #self.client.setblocking(False)
+     
         self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        logging.basicConfig(filename='client_log.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+        
         
         self.logger = logging.getLogger()
         
         self.username = username
 
         # TODO: Fix
-        self.keycik = None
+        self.switch = None
         self.crypto_module = Crypto()
 
         self.thread_pool = list()
@@ -66,12 +71,17 @@ class Client:
 
     def connect(self, ip_address, port):
         try:
+             # Start a thread for receiving and displaying messages from the server
+            receive_thread = threading.Thread(target=self.receive_messages, args=())
+            receive_thread.start()
             self.logger.info("Connecting to server: %s:%s", ip_address, port)
             self.client.connect((ip_address, int(port)))
-
-            #if self.keycik is None: 
-            #    self.keycik = self.client.recv(1024)
+            self.client.sendall(self.username.encode('utf-8'))
+            #if self.switch is None: 
+            #    self.switch = self.client.recv(1024)
+            
             print("Key transmission started...")
+            
             
             # TODO: Fix
             start_time = time.time()
@@ -103,14 +113,19 @@ class Client:
             
             print("Successfully connected to server:", ip_address, ":", port)
             print("If you want to exit program,please write exit!! ")
+           
             while True:
                 message =  input("Enter a message: ")  
                 
                 encrypted_message = self.crypto_module.encrypt_message(message)
                 self.client.sendall(encrypted_message)
-                
+                # self.client.sendall(message.encode())
                 print(f"Sent by {self.username}:{message}")
-                
+                self.receive_messages()
+               # received_message = self.client.recv(1024).decode('utf-8')
+               # sender_username, message = received_message.split(":", 1)  # Split sender_username and message
+               # print(f"Received from {sender_username}: {message}")
+               # print(f"Received from server  : {received_message}")
                 # TODO: Fix
                 if(message == "EXIT" or message == "Exit" or message == "exit"):
                     print("Are you sure you want to close the program? (Yes No)")
@@ -120,9 +135,12 @@ class Client:
                         break
                     else:
                         continue
-                    break
                 else:
                     continue
+                
+
+               # else:
+                #    continue
 
 
         except socket.timeout:
@@ -138,3 +156,18 @@ class Client:
         except Exception as e:
             self.logger.error("Exception: %s", e)
             return False
+
+    def receive_messages(self):
+        while True:
+            received_message = self.client.recv(1024).decode('utf-8')
+            if received_message:
+                sender_username, message = received_message.split(":", 1)
+                print(f"Received from {sender_username}: {message}")
+            break
+if __name__ == "__main__":
+    ip_address = "10.34.7.129"  # Example IP address
+    port = 12345  # Example port
+    username = ""
+
+    client = Client(username)
+    client.connect(ip_address, port)
