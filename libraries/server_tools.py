@@ -1,6 +1,7 @@
 import socket  
 import logging
 import sys
+import time
 from libraries.crypt_module import Crypto
 import threading
 
@@ -21,11 +22,23 @@ class Server:
         self.keycik = None
         self.clients = []  # List to store connected client sockets
         self.lock = threading.Lock()  # Lock for managing shared data
+        self.thread_pool = list()
+        self.broadcast_message_buffer = list()
+
         if self.is_encrypted:
             self.crypto_module = Crypto()
             self.keycik = self.crypto_module.create_key()
+            print("KEY:", self.keycik)
             self.crypto_module.create_cipher_suite()
-            
+             
+    def init_threads(self):
+        self.thread_pool.append( 
+            threading.Thread(
+                target=self.broadcast_message
+            )
+        )
+        self.thread_pool[-1].start()
+
     def setup_logger(self):
         logger = logging.getLogger("ServerLogger")
         logger.setLevel(logging.DEBUG)
@@ -106,13 +119,22 @@ class Server:
             pass
 
     # TODO: Fix
-    def broadcast_message(self, sender, message):
-        for client in self.clients:
-            if client != sender:
-                try:
-                    client.send(message.encode())
-                except Exception as e:
-                    self.logging.error(f"Error broadcasting message: {e.args, e.__str__()}")
+    def broadcast_message(self):
+        while True:
+            time.sleep(1)
+            if len(self.broadcast_message_buffer) > 0:
+                buffered_message = self.broadcast_message_buffer.pop()
+                
+                sender = buffered_message[0]
+                message = buffered_message[1]
+
+                for client in self.clients:
+                    if client != sender:
+                        try:
+                            client.send(message.encode())
+                            time.sleep(1)
+                        except Exception as e:
+                            self.logging.error(f"Error broadcasting message: {e.args, e.__str__()}")
                     
     def connection_handler(self, connection):
         # TODO: Fix
@@ -124,21 +146,46 @@ class Server:
                 connection.send(key_pattern.encode())  
                 connection.send(self.keycik)
                 key_message = connection.recv(1024)
-                
+                time.sleep(1)
+
                 if key_message.decode() == "KEY_RECEIVED":
                     is_key_transmitted = True
                     self.logging.info("Key Received by client!")
             # connection.sendall(key_pattern.encode() + self.keycik)
         
         while True:
-            encrypted_message = connection.recv(1024).decode('utf-8')
+            time.sleep(1)
+            message_byte = connection.recv(1024)
+            encrypted_message = message_byte.decode('utf-8')
+
+            """
+            for i in range(len(self.clients)):
+                if self.clients[i] == connection:
+                    continue
+                else:
+                    self.clients[i].sendall(message_byte)
+                    time.sleep(1)
+            """
+            """
+            self.broadcast_message(
+                sender=connection, 
+                message=encrypted_message
+            )
+            """
+            self.broadcast_message_buffer.append(
+                [
+                    connection,
+                    encrypted_message
+                ]
+            )
+            
             self.logging.info(f"Message received: {encrypted_message}")
             
             if self.is_encrypted and self.crypto_module:
                 decrypted_message = self.crypto_module.decrypt_message(encrypted_message)
                 if decrypted_message != "":
                     self.logging.info(f"Decrypted message: {decrypted_message}")
-                    self.broadcast_message(connection, decrypted_message)  # Broadcast to other clients
+                    #self.broadcast_message(connection, decrypted_message)  # Broadcast to other clients
         
 if __name__ == "__main__":
     
