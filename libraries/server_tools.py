@@ -11,7 +11,7 @@ class Server:
        
         #self.ip = "" #socket.gethostbyname_ex(socket.gethostname())[-1]
         self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
-        self.ip = "10.34.7.141"
+        self.ip = "10.34.7.140"
         self.port = port
         self.connections = []
         self.logging=self.setup_logger()
@@ -123,14 +123,25 @@ class Server:
                 self.stop_server()
 
     # TODO: Fix
-    def broadcast_message(self, sender, message):
-        for client in self.clients:
-            if client != sender:
-                try:
-                    client.send(message.encode())
-                except Exception as e:
-                    self.logging.error(f"Error broadcasting message: {e.args, e.__str__()}")
     
+    def broadcast_message(self, sender, message):
+        sender_username = None
+        for client in self.clients:
+            client_conn, username = client
+            if client_conn == sender:
+                sender_username = username
+                break
+
+        if sender_username:
+            for client_conn, _ in self.clients:
+                if client_conn != sender:
+                    try:
+                        client_conn.send(f"{sender_username}:{message}".encode())
+                    except Exception as e:
+                        self.logging.error(f"Error broadcasting message: {e.args, e.__str__()}")
+
+
+   
     
     def decrypted_message(self, connection,username, encrypted_message):
  
@@ -164,7 +175,8 @@ class Server:
                 encrypted_message = connection.recv(1024).decode('utf-8')
                 if encrypted_message:
                     self.decrypted_message(connection,username, encrypted_message)
-                  
+                    # Broadcast the decrypted message to all clients
+                    self.broadcast_message(connection, encrypted_message)
                 continue
                
                     
