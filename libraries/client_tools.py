@@ -89,7 +89,11 @@ class Client:
             
             print("Successfully connected to server:", ip_address, ":", port)
             print("If you want to exit program,please write exit!! ")
-           
+
+            send_thread = threading.Thread(target=self.send_messages, args=())
+            send_thread.start()
+            
+            
             while True:
                 message =  input("Enter a message: ")  
                 
@@ -97,7 +101,9 @@ class Client:
                 self.client.sendall(encrypted_message)
                 # self.client.sendall(message.encode())
                 print(f"Sent by {self.username}:{message}")
+                self.send_messages()
                 self.receive_messages()
+                
                # received_message = self.client.recv(1024).decode('utf-8')
                # sender_username, message = received_message.split(":", 1)  # Split sender_username and message
                # print(f"Received from {sender_username}: {message}")
@@ -113,11 +119,6 @@ class Client:
                         continue
                 else:
                     continue
-                
-
-               # else:
-                #    continue
-
 
         except socket.timeout:
             self.logger.warning("Connection is waiting...")
@@ -132,7 +133,22 @@ class Client:
         except Exception as e:
             self.logger.error("Exception: %s", e)
             return False
-
+        
+    def send_messages(self):
+        while True:
+            message = input("Enter a message: ")
+            if message.lower() in ("exit", "quit"):
+                print("Are you sure you want to close the program? (Yes No)")
+                answer = input("Answer: ")
+                if answer.lower() == "yes":
+                    print("Program is closing..")
+                    self.client.close()
+                    break
+            else:
+                encrypted_message = self.crypto_module.encrypt_message(message)
+                self.client.sendall(encrypted_message)
+            break  
+         
     def receive_messages(self):
         while True:
             received_message = self.client.recv(1024).decode('utf-8')
@@ -140,6 +156,8 @@ class Client:
                 sender_username, message = received_message.split(":", 1)
                 print(f"Received from {sender_username}: {message}")
             break
+        
+        
 if __name__ == "__main__":
     ip_address = "10.34.7.129"  # Example IP address
     port = 12345  # Example port

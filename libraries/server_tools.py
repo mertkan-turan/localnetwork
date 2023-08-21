@@ -177,7 +177,8 @@ class Server:
                     self.decrypted_message(connection,username, encrypted_message)
                     # Broadcast the decrypted message to all clients
                     self.broadcast_message(connection, encrypted_message)
-                continue
+                
+               
                
                     
         
