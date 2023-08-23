@@ -94,8 +94,10 @@ class Client:
                 encrypted_message = self.crypto_module.encrypt_message(message)
                 self.client.sendall(encrypted_message)
                 # self.client.sendall(message.encode())
-                print(f"Sent by {self.username}:{message}")
-                self.receive_messages()
+                
+                print(f"Sent to {ip_address} server: {message}")
+                # self.receive_messages()
+                
                # received_message = self.client.recv(1024).decode('utf-8')
                # sender_username, message = received_message.split(":", 1)  # Split sender_username and message
                # print(f"Received from {sender_username}: {message}")
@@ -134,6 +136,7 @@ class Client:
     def receive_messages(self):
         while True:
             received_message = self.client.recv(1024).decode('utf-8')
+            print(f"Received RAW Message: {received_message}")
             if received_message:
                 sender_username, message = received_message.split(":", 1)
                 print(f"Received from {sender_username}: {message}")
