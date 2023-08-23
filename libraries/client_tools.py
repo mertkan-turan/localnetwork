@@ -1,12 +1,9 @@
 import socket
 import errno
 import logging
-import threading
 import time
 from libraries.crypt_module import Crypto
 import threading
-import pickle
-from cryptography.fernet import Fernet
 
 
 logging.basicConfig(filename='client_log.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -27,8 +24,6 @@ class Client:
         # TODO: Fix
         self.switch = None
         self.crypto_module = Crypto()
-
-        self.thread_pool = list()
         
     def setup_logger(self):
         logger = logging.getLogger("ClientLogger")
@@ -49,26 +44,6 @@ class Client:
         
         return logger
     
-    def init_threads(self):
-        self.thread_pool.appen(
-            threading.Thread(
-                target=self.server_message_receiver
-            )
-        )
-        self.thread_pool[-1].start()
-
-
-    def server_message_receiver(self):
-        while True:
-            time.sleep(1)
-            echo_message = self.client.recv(1024)
-                                            
-            decrypted_echo_message= self.crypto_module.decrypt_message(echo_message)
-
-            if decrypted_echo_message != "":
-                self.logging.info(f"Decrypted echo message: {decrypted_echo_message}")
-
-
     def connect(self, ip_address, port):
         try:
              # Start a thread for receiving and displaying messages from the server
@@ -109,7 +84,6 @@ class Client:
                             break
             
             self.crypto_module.set_key(key)
-            self.init_threads()
             
             print("Successfully connected to server:", ip_address, ":", port)
             print("If you want to exit program,please write exit!! ")
