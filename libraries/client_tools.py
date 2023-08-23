@@ -4,8 +4,6 @@ import logging
 import time
 from libraries.crypt_module import Crypto
 import threading
-import pickle
-from cryptography.fernet import Fernet
 
 
 logging.basicConfig(filename='client_log.txt', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')

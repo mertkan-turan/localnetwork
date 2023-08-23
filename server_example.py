@@ -4,6 +4,11 @@ from libraries import server_tools
 
 if __name__ == "__main__":
     ip, port, username = cli_tools.main_actions()
-    server = server_tools.Server(port,username, is_encrypted=True)
-    server.create_server()
-    server.server_serve()
+    server_object = server_tools.Server(
+        port=port,
+        username=username, 
+        is_encrypted=True,
+        init_server=True
+    )
+
+    server_object.server_serve()
