@@ -4,16 +4,18 @@ import sys
 from libraries.crypt_module import Crypto
 import threading
 import time
+import queue
 from queue import Queue
 from typing import Dict, List
 
 class Server:
     def __init__(self, port:int, username, is_encrypted:bool=False, init_server:bool=True):
         # Parameters
+        self.broadcast_message_queue = queue.Queue()
         self.port = port
         self.username = username
         self.is_encrypted = is_encrypted 
-
+      
         # Logger
         self.logging=self.setup_logger()
 
@@ -22,7 +24,7 @@ class Server:
         self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
         #self.ip = "" #socket.gethostbyname_ex(socket.gethostname())[-1]
         self.ip = "localhost"
-        self.broadcast_message_queue = list()
+        self.broadcast_message_queue = queue.Queue()
         self.is_server_closing = False
 
         # Threads and Connection Variables
@@ -75,8 +77,13 @@ class Server:
             target=self.accept_connections,
             daemon=True
         )
+        
+        self.global_threads["message_broadcaster"] = threading.Thread(
+            target=self.message_broadcaster,
+            daemon=True
+        )
 
-
+        
     def setup_logger(self):
         logger = logging.getLogger("ServerLogger")
         logger.setLevel(logging.DEBUG)
@@ -234,8 +241,22 @@ class Server:
             except Exception as error:
                 self.logging.error(f"Error broadcasting message: {error.args, error.__str__()}")
                 return -1
-
-
+    
+    def enqueue_broadcast(self, sender_username, message):
+        self.broadcast_message_queue.put((sender_username, message))
+    
+    def message_broadcaster(self):
+        while not self.is_Server_Closed():
+            time.sleep(0.1)
+            message = self.broadcast_message_queue.get()
+            if message:
+                sender_username, message_text = message
+                self.broadcast_message(sender_username, message_text)
+                
+   
+    def start_message_broadcaster(self):
+        self.global_threads["message_broadcaster"].start()
+        
     def broadcast_message(self, sender_username:str, message:str) -> list:
         failed_broadcast_users = list()
 
@@ -253,7 +274,7 @@ class Server:
         return failed_broadcast_users
 
 
-    def task_broadcast_message(self, sender_username:str, message:str) -> list:
+    #def task_broadcast_message(self, sender_username:str, message:str) -> list:
         self.broadcast_message_queue = list()
 
         failed_broadcast_users = list()
@@ -306,8 +327,5 @@ class Server:
 
             self.logging.info(f"MESSAGE | {username}: {message}")
 
-            failed_broadcast_users = self.broadcast_message(username, message)
             
-            if failed_broadcast_users != []:
-                self.logging.info(f"Message '{message}' broadcast failed for user '{failed_broadcast_users}'")
-
+            self.enqueue_broadcast(username,message)
