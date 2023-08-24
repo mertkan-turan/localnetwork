@@ -46,10 +46,6 @@ class Server:
         self.switch = None
         self.crypto_module = None
 
-        # Dunno
-        self.stop_event = threading.Event()  # Initialize stop_event
-        self.lock = threading.Lock()  # Lock for managing shared data
-
         # Crypto Module Initialization
         if self.is_encrypted:
             self.crypto_module = Crypto()
@@ -228,7 +224,7 @@ class Server:
                     connection.send(send_pattern.encode())
                     connection.send(message.encode())
                 except Exception as error:
-                    self.logging.error(f"Error broadcasting message: {error.args, error.__str__()}")
+                    self.logging.error(f"Error message: {error.args, error.__str__()}")
 
                 # Is Received Response
                 key_message = connection.recv(1024)
@@ -244,7 +240,7 @@ class Server:
                 connection.send(message.encode())
                 return 0
             except Exception as error:
-                self.logging.error(f"Error broadcasting message: {error.args, error.__str__()}")
+                self.logging.error(f"Error message: {error.args, error.__str__()}")
                 return -1
     
     def enqueue_broadcast(self, sender_username, message):

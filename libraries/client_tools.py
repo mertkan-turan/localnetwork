@@ -3,6 +3,7 @@ import errno
 import logging
 import time
 from libraries.crypt_module import Crypto
+from server_tools import Server
 import threading
 
 
@@ -15,12 +16,8 @@ class Client:
         #self.client.setblocking(False)
      
         self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        
-        
         self.logger = logging.getLogger()
-        
         self.username = username
-
         # TODO: Fix
         self.switch = None
         self.crypto_module = Crypto()
@@ -30,7 +27,7 @@ class Client:
         logger.setLevel(logging.DEBUG)
         
         formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        
+
         file_handler = logging.FileHandler('client_log.txt')
         file_handler.setLevel(logging.DEBUG)
         file_handler.setFormatter(formatter)
@@ -132,6 +129,8 @@ class Client:
             self.logger.error("Exception: %s", e)
             return False
         
+
+    
     def send_messages(self):
         while True:
             message = input("Enter a message: ")
