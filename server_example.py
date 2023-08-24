@@ -2,7 +2,8 @@ from libraries import cli_tools
 from libraries import server_tools
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
+    print ()
     ip, port, username = cli_tools.main_actions()
     server_object = server_tools.Server(
         port=int(port),
