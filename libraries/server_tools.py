@@ -23,7 +23,7 @@ class Server:
         self.hostname=socket.gethostname()   
         self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
         #self.ip = "" #socket.gethostbyname_ex(socket.gethostname())[-1]
-        self.ip = "localhost"
+        self.ip = "10.34.7.140"
         self.broadcast_message_queue = queue.Queue()
         self.is_server_closing = False
 
@@ -120,6 +120,7 @@ class Server:
     def server_serve(self):
         self.logging.info(f"Server IP Address: {self.ip}")
         self.global_threads["server"].start()
+        self.global_threads["message_broadcaster"].start()
        
         try:
             while not self.is_Server_Closed():
@@ -142,12 +143,15 @@ class Server:
         for client in self.global_threads["clients"].values():
             client["thread"].join()
             client["conn"].close()
-            
+        
+        self.global_threads["message_broadcaster"].join()    
+
         self.logging.info("Server shutting down...")
         self.global_threads["server"].join()
         
         if self.server:
             self.server.close()
+        
         self.logging.info("Server stopped.")
 
     
@@ -163,6 +167,7 @@ class Server:
                     
                     print("connection accepted :" , conn , addr)
                     if conn is not None:
+                        # TODO Fix this
                         username = conn.recv(1024).decode('utf-8')  # Receive username from client
                         
                         temp_conn = self.__active_connection_template.copy()
