@@ -23,7 +23,7 @@ class Server:
         self.hostname=socket.gethostname()   
         self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
         #self.ip = "" #socket.gethostbyname_ex(socket.gethostname())[-1]
-        self.ip = "10.34.7.140"
+        self.ip = "localhost"
         self.broadcast_message_queue = queue.Queue()
         self.is_server_closing = False
 
