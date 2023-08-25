@@ -1,11 +1,11 @@
-from libraries import cli_tools
-from libraries import server_tools
+from Libraries.Tools import cli_tools
+from Libraries.Classes import server
 
 
 if __name__ == "__main__": 
     print ()
     ip, port, username = cli_tools.main_actions()
-    server_object = server_tools.Server(
+    server_object = server.Server(
         port=int(port),
         username=username, 
         is_encrypted=True,
