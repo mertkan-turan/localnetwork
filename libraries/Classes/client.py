@@ -2,8 +2,8 @@ import socket
 import errno
 import logging
 import time
-from libraries.crypt_module import Crypto
-from libraries.server_tools import Server
+from Libraries.Classes.crypt_module import Crypto
+from Libraries.Classes.server import Server
 import threading
 
 
@@ -11,20 +11,29 @@ logging.basicConfig(filename='client_log.txt', level=logging.DEBUG, format='%(as
 logger = logging.getLogger()
 class Client:
 
+
+
     def __init__(self,username):
-        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #self.client.setblocking(False)
-     
-        self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+         # Parameters 
+        self.username = username
         
-        
+         # Logger
         self.logger = logging.getLogger()
         
-        self.username = username
-
-        # TODO: Fix
-        self.switch = None
-        self.crypto_module = Crypto()
+        # General Variables
+        
+        # Threads and Connection Variables
+        
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        
+        self.init_threads()
+        
+        # Crypto Module Initialization
+        if self.is_encrypted:
+            self.crypto_module = Crypto()
+            self.switch = None
+        
         
     def setup_logger(self):
         logger = logging.getLogger("ClientLogger")

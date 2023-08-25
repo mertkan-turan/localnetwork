@@ -1,13 +1,13 @@
 import json
-from libraries import tools
-from libraries import cli_tools
-from libraries import client_tools
+from Libraries.Tools import tools
+from Libraries.Tools import cli_tools
+from Libraries.Classes.client import Client
 
 
 if __name__ == "__main__":
     ip, port, username = cli_tools.main_actions()
     json_data = tools.usage_info(ip,port,username)
-    client = client_tools.Client(username)
+    client = Client(username)
     client.connect(ip, port)
 
     

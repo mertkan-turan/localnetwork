@@ -1,7 +1,7 @@
 import socket  
 import logging
 import sys
-from libraries.crypt_module import Crypto
+from Classes.crypt_module import Crypto
 import threading
 import time
 import queue
@@ -24,7 +24,7 @@ def get_ip(self):
 
 class Server:
     def __init__(self, port:int, username, is_encrypted:bool=False, init_server:bool=True):
-        # Parameterscd ..
+        # Parameters ..
         self.broadcast_message_queue = queue.Queue()
         self.port = port
         self.username = username
