@@ -7,7 +7,10 @@ from Libraries.Classes.Crypt_Class import Crypto
 
 
 class CommonFunctions:
-    def __init__(self):
+    def __init__(self,port,username,is_encrypted):
+        self.port = port
+        self.username = username
+        self.is_encrypted = is_encrypted
         self.logger = logging.getLogger("ServerLogger")
         self.configure_logger()
 

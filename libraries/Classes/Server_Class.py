@@ -8,19 +8,18 @@ from typing import Dict, List
 
 from Libraries.Classes.Crypt_Class import Crypto
 from Libraries.Tools.network_tools import get_ip
+from Socket_Interface_Class import CommonFunctions
 
 
+class Server(CommonFunctions):
+    def __init__(self, port, username, is_encrypted, init_server=True):
+        super().__init__(port, username, is_encrypted)  # Call the superclass's init method
 
+        # Additional attributes specific to Server
+        self.init_server = init_server    
 
-class Server:
-    # Global
-    def __init__(self, port:int, username, is_encrypted:bool=False, init_server:bool=True):
         # Parameters ..
         self.broadcast_message_queue = queue.Queue()
-        self.port = port
-        self.username = username
-        self.is_encrypted = is_encrypted 
-      
         # Logger
         self.logging=self.setup_logger()
 
