@@ -8,9 +8,23 @@ import queue
 from queue import Queue
 from typing import Dict, List
 
+   
+def get_ip(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            # doesn't even have to be reachable
+            s.connect(('10.255.255.255', 1))
+            # s.connect(("8.8.8.8", 80))
+            IP = s.getsockname()[0]
+        except:
+            IP = '127.0.0.1'
+        finally:
+            s.close()
+        return IP
+
 class Server:
     def __init__(self, port:int, username, is_encrypted:bool=False, init_server:bool=True):
-        # Parameters
+        # Parameterscd ..
         self.broadcast_message_queue = queue.Queue()
         self.port = port
         self.username = username
@@ -23,7 +37,7 @@ class Server:
         self.hostname=socket.gethostname()   
         self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
         #self.ip = "" #socket.gethostbyname_ex(socket.gethostname())[-1]
-        self.ip = "10.34.7.140"
+        self.ip = get_ip(self)
         self.broadcast_message_queue = queue.Queue()
         self.is_server_closing = False
 
@@ -99,7 +113,9 @@ class Server:
         logger.addHandler(stream_handler)
         
         return logger  
-    
+ 
+
+
 
     def create_server(self):
 
@@ -330,3 +346,5 @@ class Server:
 
             
             self.enqueue_broadcast(username,message)
+            
+
