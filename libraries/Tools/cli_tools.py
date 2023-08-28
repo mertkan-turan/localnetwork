@@ -8,9 +8,9 @@ def main_actions():
     device_type = int(input("Is this device client [0] or server [1]:"))
     
     if device_type == 1:
-        return main_actions_server()
+        return device_type, main_actions_server()
     else: 
-        return main_actions_client()
+        return device_type, main_actions_client()
     
     
         

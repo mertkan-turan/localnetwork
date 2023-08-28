@@ -11,7 +11,8 @@ if __name__ == "__main__":
         port=int(port),
         username=username, 
         is_encrypted=True,
-        init_server=True
+        init_server=True,
+        logging_name="alfa"
     )
 
     server_object.server_serve()

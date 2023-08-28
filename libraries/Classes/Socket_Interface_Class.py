@@ -7,12 +7,15 @@ from Libraries.Classes.Crypt_Class import Crypto
 from abc import ABC, abstractmethod
 
 class SocketInterface(ABC):
-    def __init__(self,port,username,is_encrypted):
+    def __init__(self,port,username,is_encrypted:bool,is_server:bool,logging_name:str = ""):
         self.port = port
         self.username = username
         self.is_encrypted = is_encrypted
+        
+        self.logger = logging.getLogger(logging_name)
+        
+        self.create_socket(is_server)
         self.init_threads()
-        self.logger = logging.getLogger("ServerLogger")
         self.configure_logger()
     
     
@@ -20,7 +23,15 @@ class SocketInterface(ABC):
     def init_threads(self):
         pass
     
-    
+    def create_socket(self,is_server:bool,listen_number = 0):
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        
+        if is_server == True:
+            self.socket.bind((socket.gethostname(), self.port))
+            if listen_number != 0:
+                self.socket.listen(listen_number)
+
     
     def configure_logger(self):
         self.logger.setLevel(logging.DEBUG)

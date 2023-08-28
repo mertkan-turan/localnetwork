@@ -12,8 +12,8 @@ from Socket_Interface_Class import SocketInterface
 
 
 class Server(SocketInterface):
-    def __init__(self, port, username, is_encrypted, init_server=True):
-        super().__init__(port, username, is_encrypted)  # Call the superclass's init method
+    def __init__(self, port, username, is_encrypted, init_server=True, logging_name:str=""):
+        super().__init__(port, username, is_encrypted,is_server = True,logging_name=logging_name)  # Call the superclass's init method
 
         # Additional attributes specific to Server
         self.init_server = init_server    
@@ -46,7 +46,7 @@ class Server(SocketInterface):
         }
 
         # Will be initialized after
-        self.server = None
+        self.socket
         self.switch = None
         self.crypto_module = None
 
@@ -57,7 +57,7 @@ class Server(SocketInterface):
             self.crypto_module.create_cipher_suite()
             
         if init_server:
-            self.create_server()
+            self.create_socket(is_server = True)
 
         self.init_threads()
 
@@ -107,21 +107,6 @@ class Server(SocketInterface):
         logger.addHandler(stream_handler)
         
         return logger  
- 
-
-
-    # Global
-    def create_server(self, listen_number=0):
-
-        #socket.setdefaulttimeout(50)
-        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.server.bind((self.ip, int(self.port)))
-        if listen_number != 0:
-            self.server.listen(listen_number)
-        # self.server.setblocking(False)
-
-        return self.server
                           
                              
     def server_serve(self):
@@ -157,8 +142,8 @@ class Server(SocketInterface):
         self.logging.info("Server shutting down...")
         self.global_threads["server"].join()
         
-        if self.server:
-            self.server.close()
+        if self.socket:
+            self.socket.close()
         
         self.logging.info("Server stopped.")
 
@@ -170,8 +155,8 @@ class Server(SocketInterface):
             
             conn = None
             try:
-                if self.server:
-                    conn, addr = self.server.accept()
+                if self.socket:
+                    conn, addr = self.socket.accept()
                     
                     print("connection accepted :" , conn , addr)
                     if conn is not None:
