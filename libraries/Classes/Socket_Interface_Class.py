@@ -5,6 +5,7 @@ import threading
 import time
 from Libraries.Classes.Crypt_Class import Crypto
 from abc import ABC, abstractmethod
+from Libraries.Tools.network_tools import get_ip
 
 class SocketInterface(ABC):
     def __init__(self,port,username,is_encrypted:bool,is_server:bool,logging_name:str = ""):
@@ -12,6 +13,7 @@ class SocketInterface(ABC):
         self.username = username
         self.is_encrypted = is_encrypted
         
+        self.ip = get_ip()
         self.logger = logging.getLogger(logging_name)
         
         self.create_socket(is_server)

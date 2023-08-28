@@ -15,6 +15,10 @@ if __name__ == "__main__":
         logging_name="alfa"
     )
 
+    server_object.create_socket(
+        is_server=True,
+    )
+    server_object.socket.listen(-1)
     server_object.server_serve()
     
     ip, port, username = cli_tools.main_actions()
