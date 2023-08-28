@@ -8,10 +8,10 @@ from typing import Dict, List
 
 from Libraries.Classes.Crypt_Class import Crypto
 from Libraries.Tools.network_tools import get_ip
-from Socket_Interface_Class import CommonFunctions
+from Socket_Interface_Class import SocketInterface
 
 
-class Server(CommonFunctions):
+class Server(SocketInterface):
     def __init__(self, port, username, is_encrypted, init_server=True):
         super().__init__(port, username, is_encrypted)  # Call the superclass's init method
 

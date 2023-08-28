@@ -4,16 +4,24 @@ import sys
 import threading
 import time
 from Libraries.Classes.Crypt_Class import Crypto
+from abc import ABC, abstractmethod
 
-
-class CommonFunctions:
+class SocketInterface(ABC):
     def __init__(self,port,username,is_encrypted):
         self.port = port
         self.username = username
         self.is_encrypted = is_encrypted
+        self.init_threads()
         self.logger = logging.getLogger("ServerLogger")
         self.configure_logger()
-
+    
+    
+    @abstractmethod
+    def init_threads(self):
+        pass
+    
+    
+    
     def configure_logger(self):
         self.logger.setLevel(logging.DEBUG)
         
