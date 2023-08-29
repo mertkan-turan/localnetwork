@@ -150,6 +150,7 @@ class Client:
                 sender_username, message = received_message.split(":", 1)
                 print(f"Received from {sender_username}: {message}")
             break
+        
 if __name__ == "__main__":
     ip_address = "10.34.7.129"  # Example IP address
     port = 12345  # Example port

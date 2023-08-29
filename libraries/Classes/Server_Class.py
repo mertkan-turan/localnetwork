@@ -206,40 +206,6 @@ class Server(SocketInterface):
 
         self.global_threads["clients"].pop(username)
 
-
-    # Global
-    def send_message(self, connection:socket.socket, message:str, send_pattern:str="", receive_pattern:str="", timeout:int=3) -> int:
-        if send_pattern != "":
-            start_time = time.time()
-            end_time = time.time()
-
-            while end_time - start_time < timeout:
-                # Timeout Control
-                end_time = time.time()
-
-                # Send Action
-                try:
-                    connection.send(send_pattern.encode())
-                    connection.send(message.encode())
-                except Exception as error:
-                    self.logging.error(f"Error message: {error.args, error.__str__()}")
-
-                # Is Received Response
-                key_message = connection.recv(1024)
-
-                if key_message.decode() == receive_pattern:
-                    # message be sended successfully
-                    return 0
-                
-            # If timeout occurred, message NOT be sended
-            return -1
-        else:
-            try:
-                connection.send(message.encode())
-                return 0
-            except Exception as error:
-                self.logging.error(f"Error message: {error.args, error.__str__()}")
-                return -1
     
     def enqueue_broadcast(self, sender_username, message):
         self.broadcast_message_queue.put((sender_username, message))
@@ -264,7 +230,7 @@ class Server(SocketInterface):
                 self.logging.info("Sending message...")
 
                 is_sended = self.send_message(
-                    connection=connection_pack["conn"],
+                    local_socket=connection_pack["conn"],
                     message=f"{sender_username}:{message}",
                 )
                 if is_sended != 0:
@@ -273,40 +239,11 @@ class Server(SocketInterface):
         return failed_broadcast_users
 
 
-    #def task_broadcast_message(self, sender_username:str, message:str) -> list:
-        self.broadcast_message_queue = list()
-
-        failed_broadcast_users = list()
-
-        for username, connection_pack in self.global_threads["clients"].items():
-            if sender_username != username:
-                self.logging.info("Sending message...")
-
-                is_sended = self.send_message(
-                    connection=connection_pack["conn"],
-                    message=f"{sender_username}:{message}",
-                )
-                if is_sended != 0:
-                    failed_broadcast_users.append(username)
-
-        return failed_broadcast_users
-
-    
     # Global
-    def decrypted_message(self, encrypted_message):
-        decrypted_message = ""        
- 
-        if self.is_encrypted and self.crypto_module:
-            decrypted_message = self.crypto_module.decrypt_message(encrypted_message)
-
-        return decrypted_message
-                
-                
-    # Global
-    def send_key(self, connection):
+    def send_key(self, local_socket):
         if self.switch:
             return self.send_message(
-                connection=connection,
+                local_socket=local_socket,
                 message=self.switch.decode(),
                 send_pattern="!KEY:",
                 receive_pattern="KEY_RECEIVED",
@@ -318,17 +255,13 @@ class Server(SocketInterface):
     def connection_handler(self, connection,username):
         if self.is_encrypted:
             self.send_key(connection)
-      
+        
         while not self.is_Server_Closed():
             time.sleep(0.03)
             
-            message = connection.recv(1024).decode('utf-8')
-
-            if self.is_encrypted:
-                message = self.decrypted_message(message)
+            message = self.receive_messages(connection)
 
             self.logging.info(f"MESSAGE | {username}: {message}")
-
             
             self.enqueue_broadcast(username,message)
             
