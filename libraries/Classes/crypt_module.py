@@ -7,7 +7,7 @@ import threading
 class Crypto():
     def __init__(self):
         # self.key = self.create_key()
-        self.key = ""
+        self.key:bytes = b"00000000"
         
         # self.cipher_suite = self.create_cipher_suite()
         self.cipher_suite = None
@@ -21,7 +21,7 @@ class Crypto():
         
         return self.key
     
-    def set_key(self, key):
+    def set_key(self, key: bytes):
         self.key = key
         self.cipher_suite = self.create_cipher_suite()
     

@@ -24,7 +24,7 @@ class Crypto():
     def set_key(self, key):
         self.key = key
         self.cipher_suite = self.create_cipher_suite()
-    
+
     def get_key_file(self):
         with open("./key", "rb") as key_file:
             key = pickle.load(key_file)
@@ -34,7 +34,7 @@ class Crypto():
         self.cipher_suite = Fernet(self.key)
         return self.cipher_suite
     
-    def encrypt_message(self, message):
+    def encrypt_message(self, message:str):
         if self.cipher_suite:
             encrypted_message = self.cipher_suite.encrypt(message.encode())
             return encrypted_message

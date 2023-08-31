@@ -1,16 +1,14 @@
 
-from pathlib import Path
-import json
-import logging
 from Libraries.Tools import tools
-#Merhaba
-def main_actions():
-    device_type = int(input("Is this device client [0] or server [1]:"))
-    
-    if device_type == 1:
-        return device_type, main_actions_server()
+
+
+def main_actions() -> tuple[bool, bool, tuple[str, str, str]]:
+    device_type = input("Is this device server? (yes/no): ").lower() == "yes"
+    is_encrypted = input("Is encryption enabled? (yes/no): ").lower() == "yes"
+    if device_type == "yes":
+        return device_type,is_encrypted,main_actions_server()
     else: 
-        return device_type, main_actions_client()
+        return device_type,is_encrypted,main_actions_client()
     
     
         
@@ -32,7 +30,7 @@ def main_actions_client():
     
     return  server_ip, port, username
 
-def main_actions_server():
+def main_actions_server() -> tuple[str, str, str]:
     username = input("Enter Username: ")
     port = input("Enter Port:")
     ip = ""

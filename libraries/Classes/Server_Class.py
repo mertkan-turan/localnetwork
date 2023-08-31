@@ -4,49 +4,47 @@ import sys
 import threading
 import time
 import queue
-from typing import Dict, List
+from typing import Dict, Type, Union
 
 from Libraries.Classes.Crypt_Class import Crypto
 from Libraries.Tools.network_tools import get_ip
-from Socket_Interface_Class import SocketInterface
+from Libraries.Classes.Socket_Interface_Class import SocketInterface
 
 
 class Server(SocketInterface):
-    def __init__(self, port, username, is_encrypted, init_server=True, logging_name:str=""):
+    def __init__(self, port:int, username:str, is_encrypted:bool, init_server:bool=True, timeout_second:int|None= None, listen_number:int=1, logging_name:str=""):
         super().__init__(port, username, is_encrypted,is_server = True,logging_name=logging_name)  # Call the superclass's init method
 
         # Additional attributes specific to Server
         self.init_server = init_server    
 
-        # Parameters ..
-        self.broadcast_message_queue = queue.Queue()
         # Logger
         self.logging=self.setup_logger()
 
         # General Variables
-        self.hostname=socket.gethostname()   
-        self.ip = socket.gethostbyname(self.hostname).replace(",",".") 
-        #self.ip = "" #socket.gethostbyname_ex(socket.gethostname())[-1]
-        self.ip = get_ip()
         self.broadcast_message_queue = queue.Queue()
         self.is_server_closing = False
 
-        # Threads and Connection Variables
-        self.global_threads = {
-            "server": None,
-            "clients": dict()
-        }
+        
         self.__active_connection_template: Dict[
             str, 
-            socket.socket | socket._RetAddress | threading.Thread
+            Union[socket.socket, socket._RetAddress, threading.Thread]
         ] = {
             "conn": None,
             "addr": None,
             "thread": None
         }
+        # Threads and Connection Variables
+        self.global_threads: Dict[
+            str, 
+            Union[threading.Thread, Dict[
+                str, 
+                Union[socket.socket, socket._RetAddress, threading.Thread]]]] = {
+            "server": threading.Thread(),
+            "clients": dict()
+        }
 
         # Will be initialized after
-        self.socket
         self.switch = None
         self.crypto_module = None
 
@@ -57,21 +55,13 @@ class Server(SocketInterface):
             self.crypto_module.create_cipher_suite()
             
         if init_server:
-            self.create_socket(is_server = True)
+            self.create_socket(
+                is_server = True, 
+                listen_number=listen_number,
+                timeout_second=timeout_second
+            )
 
         self.init_threads()
-
-
-    # Global
-    #@property
-    def is_Server_Closed(self):
-        return self.is_server_closing
-
-
-    # Global
-    #@is_Server_Closed.setter
-    def set_Server_Closed(self, shutdown:bool):
-        self.is_server_closing = shutdown
 
 
     # Global
@@ -115,7 +105,7 @@ class Server(SocketInterface):
         self.global_threads["message_broadcaster"].start()
        
         try:
-            while not self.is_Server_Closed():
+            while not self.is_Socket_Closed():
                 
                 # Example: Print a message every 8 seconds
                 self.logging.debug("Server is running...")
@@ -131,7 +121,7 @@ class Server(SocketInterface):
     def stop_server(self):
         self.logging.info("Clients shutting down...")
         
-        self.set_Server_Closed(True)
+        self.set_Socket_Closed(True)
         
         for client in self.global_threads["clients"].values():
             client["thread"].join()
@@ -150,49 +140,56 @@ class Server(SocketInterface):
     
     def accept_connections(self):
         
-        while not self.is_Server_Closed():
+        while not self.is_Socket_Closed():
             time.sleep(0.05)
             
             conn = None
+            
             try:
                 if self.socket:
-                    conn, addr = self.socket.accept()
+                    try:
+                        conn, addr = self.socket.accept()
+                    except Exception as error:
+                        self.logging.error(f"Error message: {error.args, error.__str__()}")
+                        break
                     
-                    print("connection accepted :" , conn , addr)
                     if conn is not None:
-                        # TODO Fix this
-                        username = conn.recv(1024).decode('utf-8')  # Receive username from client
+                        response, username = self.accept_protocol(conn)
                         
-                        temp_conn = self.__active_connection_template.copy()
-                        
-                        temp_conn["conn"] = conn
-                        temp_conn["addr"] = addr
-                        temp_conn["thread"] = threading.Thread(
-                            target=self.connection_handler,
-                            args=(conn,username)
-                        )
+                        if response:
+                            temp_conn = self.__active_connection_template.copy()
+                            
+                            temp_conn["conn"] = conn
+                            temp_conn["addr"] = addr
+                            temp_conn["thread"] = threading.Thread(
+                                target=self.connection_handler,
+                                args=(conn, username)
+                            )
 
-                        self.global_threads["clients"][username] = temp_conn
-                        self.global_threads["clients"][username]["thread"].start()
-                        """
-                        { # Dict: active_connections (key: username)
-                            # value: 
-                            { # username
-                                "conn": conn,
-                                "thread": thread
-                            },
-                            { # username
-                                "conn": conn,
-                                "thread": thread
-                            },
-                            { # username
-                                "conn": conn,
-                                "thread": thread
+                            self.global_threads["clients"][username] = temp_conn
+                            self.global_threads["clients"][username]["thread"].start()
+                            """
+                            { # Dict: active_connections (key: username)
+                                # value: 
+                                { # username
+                                    "conn": conn,
+                                    "thread": thread
+                                },
+                                { # username
+                                    "conn": conn,
+                                    "thread": thread
+                                },
+                                { # username
+                                    "conn": conn,
+                                    "thread": thread
+                                }
                             }
-                        }
-                        """
-                        
-                        self.logging.info(f"Connection accepted: {addr}")
+                            """
+                            
+                            self.logging.info(f"Connection accepted: {addr}")
+                        else:
+                            self.logging.info(f"Connection broken (response False): {addr}")
+                            
                     
             except socket.timeout:
                 self.logging.warn("Connection is waiting.. (Timeout)")
@@ -211,7 +208,7 @@ class Server(SocketInterface):
         self.broadcast_message_queue.put((sender_username, message))
     
     def message_broadcaster(self):
-        while not self.is_Server_Closed():
+        while not self.is_Socket_Closed():
             time.sleep(0.1)
             message = self.broadcast_message_queue.get()
             if message:
@@ -247,16 +244,36 @@ class Server(SocketInterface):
                 message=self.switch.decode(),
                 send_pattern="!KEY:",
                 receive_pattern="KEY_RECEIVED",
-                timeout=5
+                timeout=5,
+                encrypt=False
             )
+            
+    
+    def accept_protocol(self, connection):
 
-
-    # Global
-    def connection_handler(self, connection,username):
+        self.logger.info("Accept Protocol: Started")
         if self.is_encrypted:
             self.send_key(connection)
+            self.logger.info("Accept Protocol: Key sent")
         
-        while not self.is_Server_Closed():
+        self.logger.info("Accept Protocol: Waiting for username...")
+        response, username = self.receive_messages(
+            local_socket=self.socket,
+            pattern_received="!USERNAME:", 
+            pattern_received_response="USERNAME_RECEIVED",
+            decrypt=True
+        )
+        self.logger.info("Accept Protocol: Username received")
+        
+        if response:
+            self.logger.info(f"Username received: {response}")
+        return response, username
+        
+
+    # Global
+    def connection_handler(self, connection, username):
+        
+        while not self.is_Socket_Closed():
             time.sleep(0.03)
             
             message = self.receive_messages(connection)
