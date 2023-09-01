@@ -56,7 +56,7 @@ class Client(SocketInterface):
                 )
                 
                 
-                if response and received_key:
+                if response:
                     self.logger.info("Key Received.")
                     self.crypto_module.set_key(received_key.encode())
                 else:

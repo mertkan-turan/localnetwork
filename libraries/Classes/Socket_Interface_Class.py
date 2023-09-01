@@ -69,7 +69,7 @@ class SocketInterface(ABC):
         
         formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         
-        file_handler = logging.FileHandler('server_log.txt') 
+        file_handler = logging.FileHandler(self.logger.name + ".log") 
         file_handler.setLevel(logging.DEBUG)
         file_handler.setFormatter(formatter)
         
@@ -248,6 +248,7 @@ class SocketInterface(ABC):
 
                 # Send Action
                 try:
+                    self.logger.info(f"Sending pattern: {send_pattern}")
                     send_pattern_byte = self.encrypt_message(
                         send_pattern,
                         encrypt
@@ -261,10 +262,11 @@ class SocketInterface(ABC):
                         message_converted = message_converted.decode()
                         message_converted += "\0" * (self.message_max_byte_length - send_pattern_byte_len)
                         send_pattern_byte = message_converted.encode()
+                        
                     local_socket.send(send_pattern_byte)
-                    
-                    
-                    
+                    self.logger.info(f"Pattern '{send_pattern}' sent as '{send_pattern_byte}'.")
+
+                    self.logger.info(f"Sending message: {message}")
                     message_byte = self.encrypt_message(
                         message,
                         encrypt
@@ -278,7 +280,10 @@ class SocketInterface(ABC):
                         message_converted = message_converted.decode()
                         message_converted += "\0" * (self.message_max_byte_length - message_byte_len)
                         message_byte = message_converted.encode()
+                        
                     local_socket.send(message_byte)
+                    self.logger.info(f"Message '{message}' sent as '{message_byte}'.")
+
                 except Exception as error:
                     self.logger.error(f"Error message: {error.args, error.__str__()}")
 
@@ -289,6 +294,7 @@ class SocketInterface(ABC):
                 #     timeout=timeout,
                 #     decrypt=encrypt
                 # )
+                self.logger.info(f"Receiving response: {receive_pattern}")
                 response, received_message = self.message_receive(
                     local_socket=local_socket,
                     timeout=timeout,
@@ -297,8 +303,11 @@ class SocketInterface(ABC):
                 )
                 
                 if response and receive_pattern in received_message:
+                    self.logger.info(f"Pattern '{receive_pattern}' received as '{received_message}'.")
                     # message be sended successfully
                     return 0
+                else:
+                    self.logger.error(f"Pattern '{receive_pattern}' can not be received as [{response}]'{received_message}'.")
 
             # If timeout occurred, message NOT be sended
             return -1
@@ -404,7 +413,8 @@ class SocketInterface(ABC):
             local_buffer += received_message
             
             if local_buffer_len == self.message_max_byte_length:
-                self.logger.debug("Message Received")
+                local_buffer = local_buffer.strip("\0")
+                self.logger.debug(f"Message Received: {local_buffer_len, local_buffer}")
                 # print(f"\nMESSAGE RECEIVED: {local_buffer}")
                 return True, local_buffer
             
@@ -434,12 +444,12 @@ class SocketInterface(ABC):
                 return True, local_buffer
             
             received_message = local_socket.recv(1).decode()
+            received_message.strip("\0")
             if decrypt:
                 received_message = self.decrypt_message(
                     received_message,
                     decrypt
                 )
-            received_message.strip("\0")
             local_buffer += received_message
             
         # print(f"\nPATTERN NOT FOUND")

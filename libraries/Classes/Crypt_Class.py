@@ -36,9 +36,9 @@ class Crypto():
     
     def encrypt_message(self, message:str):
         if self.cipher_suite:
-            print(f"[DEBUG] Message Encryption -> '{message}':{len(message.encode())}")
+            # print(f"[DEBUG] Message Encryption -> '{message}':{len(message.encode())}")
             encrypted_message = self.cipher_suite.encrypt(message.encode())
-            print(f"[DEBUG] Message Encrypted -> {len(encrypted_message)}")
+            # print(f"[DEBUG] Message Encrypted -> {len(encrypted_message)}")
             return encrypted_message
         else:
             raise Exception("No cipher suite created. Please create a cipher suite first.")
