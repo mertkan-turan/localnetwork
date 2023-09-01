@@ -41,7 +41,7 @@ class Client(SocketInterface):
                     pattern_received="!KEY:", 
                     pattern_received_response="KEY_RECEIVED",
                     decrypt=False,
-                    timeout=999 # TODO: DEBUG
+                    timeout=3 # TODO: DEBUG
                 )
 
                 
@@ -59,7 +59,7 @@ class Client(SocketInterface):
                     message = self.username,
                     send_pattern = "!USERNAME:", 
                     receive_pattern = "USERNAME_RECEIVED",
-                    timeout=999 # TODO: DEBUG
+                    timeout=3 # TODO: DEBUG
             )
             if response:
                 self.logger.info(f"Username sent: {response}")
