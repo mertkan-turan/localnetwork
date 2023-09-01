@@ -1,12 +1,14 @@
 import socket
 import logging
 import sys
-import threading
 import time
 from typing import ByteString
 from Libraries.Classes.Crypt_Class import Crypto
 from abc import ABC, abstractmethod
 from Libraries.Tools.network_tools import get_ip
+
+
+
 
 class SocketInterface(ABC):
     def __init__(self, port:int, username:str, is_encrypted: bool, is_server: bool, logging_name: str = ""):
@@ -54,6 +56,7 @@ class SocketInterface(ABC):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.settimeout(timeout_second)
+        #self.socket.setblocking(False)
 
         if is_server == True:
             self.socket.bind((self.ip, self.port))
@@ -80,13 +83,7 @@ class SocketInterface(ABC):
 
     
     def send_message(self, local_socket, message:str, send_pattern:str="", receive_pattern:str="", timeout=3, encrypt=True):
-        message_byte_len = len(message.encode())
         pattern_byte_len = len(send_pattern.encode())
-        
-        if message_byte_len > self.message_max_byte_length:
-            raise Exception(f"Message byte length is too long. Maximum byte length is {self.message_max_byte_length}.")
-        elif message_byte_len < self.message_max_byte_length:
-            message += "\0" * (self.message_max_byte_length - message_byte_len)
         
         if pattern_byte_len > self.message_max_byte_length:
             raise Exception(f"Pattern byte length is too long. Maximum byte length is {self.message_max_byte_length}.")
@@ -108,11 +105,23 @@ class SocketInterface(ABC):
                         encrypt
                     )
                     local_socket.send(send_pattern_byte)
+
                     message_byte = self.encrypt_message(
-                        message, 
+                        message,
                         encrypt
                     )
+                    message_byte_len = len(message_byte)
+                    if message_byte_len > self.message_max_byte_length:
+                        raise Exception(
+                            f"Message byte length is too long. Maximum byte length is {self.message_max_byte_length}.")
+                    elif message_byte_len < self.message_max_byte_length:
+                        message_converted = bytes(message_byte)
+                        message_converted = message_converted.decode()
+                        message_converted += "\0" * (self.message_max_byte_length - message_byte_len)
+                        message_byte = message_converted.encode()
+                        
                     local_socket.send(message_byte)
+                    
                 except Exception as error:
                     self.logger.error(f"Error message: {error.args, error.__str__()}")
 
@@ -124,15 +133,15 @@ class SocketInterface(ABC):
                     decrypt=encrypt
                 )
                 
-                """message = ""
-                message = local_socket.recv(self.message_max_byte_length).decode()
-                message = message.strip("\0")
-                # Receive message without pattern
-                receive_message = self.decrypt_message(
-                    message=message,
-                    decrypt=encrypt
-                )"""
-
+                # message = ""
+                # message = local_socket.recv(self.message_max_byte_length).decode()
+                # message = message.strip("\0")
+                # # Receive message without pattern
+                # receive_message = self.decrypt_message(
+                #     message=message,
+                #     decrypt=encrypt
+                # )
+                
                 if receive_message == receive_pattern:
                     # message be sended successfully
                     return 0
@@ -141,7 +150,11 @@ class SocketInterface(ABC):
             return -1
         else:
             try:
-                local_socket.sendall(message.encode())
+                send_message_byte = self.encrypt_message(
+                    send_pattern,
+                    encrypt
+                )
+                local_socket.send(send_message_byte)
                 return 0
             except Exception as error:
                 self.logger.error(f"Error message: {error.args, error.__str__()}")
@@ -149,33 +162,33 @@ class SocketInterface(ABC):
 
 
     def receive_messages(self, local_socket:socket.socket, pattern_received="", pattern_received_response="", timeout:int=3, decrypt:bool=True) -> tuple[bool, str]:
-        message = ""
-
         # If pattern received is not empty, then we will wait for the pattern
         if pattern_received != "":
             start_time = time.time()
             end_time = time.time()
             
             # PATTERN HOOK
-            while message != pattern_received:
+            received_pattern = ""
+            while received_pattern != pattern_received:
                 end_time = time.time()
                 
                 if end_time - start_time > timeout:
                     return False, self.__timeout_pattern
                 
-                try:
-                    self.logger.info(f"receiving {pattern_received}")
-                    received_message = local_socket.recv(self.message_max_byte_length).decode()
-                    self.logger.info(f"received")
-                except Exception as error:
-                    self.logger.error(f"Error while receiving message.{error.args, error.__str__()}")
+                self.logger.info(f"receiving {pattern_received}")
+                received_pattern = local_socket.recv(self.message_max_byte_length).decode()
+
+                if self.is_encrypted and self.crypto_module is not None and decrypt:
+                    received_pattern = self.crypto_module.decrypt_message(received_pattern)
+                received_pattern = received_pattern.strip("\0")
+
+                self.logger.info(f"received")
                     
-                received_message = received_message.strip("\0")
-                self.logger.debug(f"pattern_received message: {received_message}")
-                message = self.decrypt_message(
-                    received_message,
-                    decrypt
-                )
+                self.logger.debug(f"pattern_received message: {received_pattern}")
+                # message = self.decrypt_message(
+                #     received_pattern,
+                #     decrypt
+                # )
                 
             # MESSAGE HOOK
             message = ""
@@ -187,11 +200,13 @@ class SocketInterface(ABC):
                 
                 message = local_socket.recv(self.message_max_byte_length).decode()
                 message = message.strip("\0")
-                self.logger.debug(f"Received message: {message}")
+                
                 message = self.decrypt_message(
                     message,
                     decrypt
                 )
+                self.logger.debug(f"Received message: {message}")
+                # message = message.strip("\0")
                 
             self.logger.debug(f"sending pattern_received_response: {pattern_received_response}")
             pattern_received_response_byte = self.encrypt_message(
@@ -200,11 +215,13 @@ class SocketInterface(ABC):
             )
             local_socket.sendall(pattern_received_response_byte)
             # TODO: Fix the problem of send_message without pattern
-            """self.send_message(
+            """
+            self.send_message(
                 local_socket=local_socket, 
                 message=pattern_received_response,
                 encrypt=decrypt
-            )"""
+            )
+            """
             self.logger.debug(f"sent pattern_received_response: {pattern_received_response}")
             
         else:
@@ -218,6 +235,176 @@ class SocketInterface(ABC):
             )
 
         return True, message
+
+
+    def message_sender(self, local_socket, message: str, send_pattern: str="", receive_pattern: str="", timeout=3, encrypt=True):
+        if send_pattern != "":
+            start_time = time.time()
+            end_time = time.time()
+
+            while end_time - start_time < timeout:
+                # Timeout Control
+                end_time = time.time()
+
+                # Send Action
+                try:
+                    send_pattern_byte = self.encrypt_message(
+                        send_pattern,
+                        encrypt
+                    )
+                    local_socket.send(send_pattern_byte)
+                    message_byte = self.encrypt_message(
+                        message,
+                        encrypt
+                    )
+                    local_socket.send(message_byte)
+                except Exception as error:
+                    self.logger.error(f"Error message: {error.args, error.__str__()}")
+
+                # Is Received Response
+                response, received_message = self.pattern_receive(
+                    local_socket=local_socket,
+                    pattern=receive_pattern,
+                    timeout=timeout,
+                    decrypt=encrypt
+                )
+                if response:
+                    # message be sended successfully
+                    return 0
+
+            # If timeout occurred, message NOT be sended
+            return -1
+        else:
+            try:
+                send_message_byte = self.encrypt_message(
+                    send_pattern,
+                    encrypt
+                )
+                local_socket.send(send_message_byte)
+                return 0
+            except Exception as error:
+                self.logger.error(
+                    f"Error message: {error.args, error.__str__()}")
+                return -1
+
+
+    def message_receiver(self, local_socket: socket.socket, pattern_received="", pattern_received_response="", timeout: int = 3, decrypt: bool=True):
+        message = ""
+
+        # If pattern received is not empty, then we will wait for the pattern
+        if pattern_received != "":
+            
+            # Wait for Pattern
+            self.logger.info(f"receiving {pattern_received}")
+            response, received_message = self.pattern_receive(
+                local_socket=local_socket,
+                pattern=pattern_received,
+                timeout=timeout,
+                decrypt=decrypt
+            )
+                
+            if response:
+                # Wait for Message
+                response, received_message = self.message_receive(
+                    local_socket=local_socket,
+                    timeout=timeout,
+                    decrypt=decrypt
+                )
+                if response:
+                    # Send Response
+                    response = self.message_sender(
+                        local_socket=local_socket,
+                        message=pattern_received_response,
+                    )
+                    if response != 0:
+                        self.logger.error(f"Response Message '{pattern_received_response}' can not be sent!")
+                    
+                    return True, received_message
+                else:
+                    self.logger.error(f"Message can not be received!")
+            else:
+                self.logger.error(f"Pattern '{pattern_received}' can not be received!") 
+                
+
+            return False, self.__timeout_pattern
+
+        else:
+            message = ""
+            message = local_socket.recv(self.message_max_byte_length).decode()
+            message = message.strip("\0")
+            # Receive message without pattern
+            message = self.decrypt_message(
+                message,
+                decrypt
+            )
+
+        return True, message
+
+
+    def message_receive(self, local_socket: socket.socket, timeout: int, decrypt: bool):
+        local_buffer = ""
+        local_buffer_len = 0
+
+        start_time = time.time()
+        end_time = time.time()
+
+        self.logger.debug("message_receive")
+        while end_time - start_time < timeout:
+            print(f"-> BUFFER [{local_buffer_len}]:{local_buffer}", end="\r")
+            # Timeout Control
+            end_time = time.time()
+            
+            received_message = local_socket.recv(1).decode()
+            local_buffer_len += 1
+            if decrypt:
+                received_message = self.decrypt_message(
+                    received_message,
+                    decrypt
+                )
+            local_buffer += received_message
+            
+            if local_buffer_len == self.message_max_byte_length:
+                # self.logger.info("\nPATTERN FOUND")
+                print(f"\nMESSAGE RECEIVED: {local_buffer}")
+                return True, local_buffer
+            
+        print(f"\nMESSAGE NOT RECEIVED: {local_buffer_len, local_buffer}")
+        # self.logger.warn(f"\nPATTERN NOT FOUND")
+        return False, local_buffer
+
+
+
+    def pattern_receive(self, local_socket: socket.socket, pattern:str, timeout:int, decrypt:bool):
+        local_buffer = ""
+        start_time = time.time()
+        end_time = time.time()
+
+        self.logger.debug("pattern_receive")
+        while end_time - start_time < timeout:
+            print(f"-> BUFFER:{local_buffer}", end="\r")
+            # Timeout Control
+            end_time = time.time()
+            if pattern in local_buffer:
+                # self.logger.info("\nPATTERN FOUND")
+                print(f"\nPATTERN FOUND")
+                return True, local_buffer
+            
+            received_message = local_socket.recv(1).decode()
+            if decrypt:
+                received_message = self.decrypt_message(
+                    received_message,
+                    decrypt
+                )
+            received_message.strip("\0")
+            local_buffer += received_message
+            
+        print(f"\nPATTERN NOT FOUND")
+        # self.logger.warn(f"\nPATTERN NOT FOUND")
+        return False, local_buffer
+
+
+
+
 
     def encrypt_message(self, message:str, encrypt:bool) -> ByteString:
         if self.is_encrypted and self.crypto_module is not None and encrypt:

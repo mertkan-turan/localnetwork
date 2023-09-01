@@ -151,7 +151,7 @@ class Server(SocketInterface):
                         conn, addr = self.socket.accept()
                     except Exception as error:
                         self.logging.error(f"Error message: {error.args, error.__str__()}")
-                        break
+                        continue
                     
                     if conn is not None:
                         response, username = self.accept_protocol(conn)
@@ -226,10 +226,19 @@ class Server(SocketInterface):
             if sender_username != username:
                 self.logging.info("Sending message...")
 
-                is_sended = self.send_message(
+                # is_sended = self.send_message(
+                #     local_socket=connection_pack["conn"],
+                #     message=f"{sender_username}:{message}",
+                # )
+                is_sended = self.message_sender(
                     local_socket=connection_pack["conn"],
                     message=f"{sender_username}:{message}",
+                    # send_pattern="!MESSAGE:",
+                    # receive_pattern="MESSAGE_RECEIVED",
+                    timeout=5,
+                    encrypt=False
                 )
+                
                 if is_sended != 0:
                     failed_broadcast_users.append(username)
 
@@ -239,7 +248,15 @@ class Server(SocketInterface):
     # Global
     def send_key(self, local_socket):
         if self.switch:
-            return self.send_message(
+            # return self.send_message(
+            #     local_socket=local_socket,
+            #     message=self.switch.decode(),
+            #     send_pattern="!KEY:",
+            #     receive_pattern="KEY_RECEIVED",
+            #     timeout=5,
+            #     encrypt=False
+            # )
+            return self.message_sender(
                 local_socket=local_socket,
                 message=self.switch.decode(),
                 send_pattern="!KEY:",
@@ -253,20 +270,30 @@ class Server(SocketInterface):
 
         self.logger.info("Accept Protocol: Started")
         if self.is_encrypted:
+            self.logger.info("Accept Protocol: Key sending...")
             self.send_key(connection)
             self.logger.info("Accept Protocol: Key sent")
         
         self.logger.info("Accept Protocol: Waiting for username...")
-        response, username = self.receive_messages(
+        # response, username = self.receive_messages(
+        #     local_socket=self.socket,
+        #     pattern_received="!USERNAME:", 
+        #     pattern_received_response="USERNAME_RECEIVED",
+        #     decrypt=True
+        # )
+        response, username = self.message_receiver(
             local_socket=self.socket,
-            pattern_received="!USERNAME:", 
+            pattern_received="!USERNAME:",
             pattern_received_response="USERNAME_RECEIVED",
+            timeout=5,
             decrypt=True
         )
-        self.logger.info("Accept Protocol: Username received")
         
         if response:
-            self.logger.info(f"Username received: {response}")
+            self.logger.info(f"Accept Protocol: Username received: {username}")
+        else:
+            self.logger.error(f"Accept Protocol: Username could not be received: {username}")
+            
         return response, username
         
 
@@ -276,9 +303,14 @@ class Server(SocketInterface):
         while not self.is_Socket_Closed():
             time.sleep(0.03)
             
-            message = self.receive_messages(connection)
+            # message = self.receive_messages(connection)
 
-            self.logging.info(f"MESSAGE | {username}: {message}")
+            response, message = self.message_receiver(
+                local_socket=connection,
+                timeout=5,
+                decrypt=True
+            )
+            self.logging.info(f"MESSAGE | {username}: [{response}] {message}")
             
             self.enqueue_broadcast(username,message)
             

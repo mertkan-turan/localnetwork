@@ -36,14 +36,21 @@ class Client(SocketInterface):
             if self.is_encrypted and self.crypto_module is not None:
                 # Receive key from server
                 self.logger.info("Receiving key from server...")
-                response, received_key = self.receive_messages(
-                    local_socket=self.socket, 
-                    pattern_received="!KEY:", 
-                    pattern_received_response="KEY_RECEIVED",
-                    decrypt=False,
-                    timeout=3 # TODO: DEBUG
-                )
+                # response, received_key = self.receive_messages(
+                #     local_socket=self.socket, 
+                #     pattern_received="!KEY:", 
+                #     pattern_received_response="KEY_RECEIVED",
+                #     decrypt=False,
+                #     timeout=3 # TODO: DEBUG
+                # )
 
+                response, received_key = self.message_receiver(
+                    local_socket=self.socket,
+                    pattern_received="!KEY:",
+                    pattern_received_response="KEY_RECEIVED",
+                    timeout=5,
+                    decrypt=False
+                )
                 
                 
                 if response and received_key:
@@ -54,13 +61,22 @@ class Client(SocketInterface):
                     return -1
 
             self.logger.info("Sending username...")
-            response = self.send_message(
-                    local_socket = self.socket, 
-                    message = self.username,
-                    send_pattern = "!USERNAME:", 
-                    receive_pattern = "USERNAME_RECEIVED",
-                    timeout=3 # TODO: DEBUG
+            # response = self.send_message(
+            #         local_socket = self.socket, 
+            #         message = self.username,
+            #         send_pattern = "!USERNAME:", 
+            #         receive_pattern = "USERNAME_RECEIVED",
+            #         timeout=3 # TODO: DEBUG
+            # )
+            
+            response = self.message_sender(
+                local_socket = self.socket, 
+                message = self.username,
+                send_pattern = "!USERNAME:", 
+                receive_pattern = "USERNAME_RECEIVED",
+                timeout=3 # TODO: DEBUG
             )
+            
             if response:
                 self.logger.info(f"Username sent: {response}")
             
@@ -90,10 +106,17 @@ class Client(SocketInterface):
         while not self.is_Socket_Closed():
             time.sleep(0.1)
             try:
-                response, received_message = self.receive_messages(
+                # response, received_message = self.receive_messages(
+                #     local_socket=self.socket,
+                #     #pattern_received="!MESSAGE:",  # Adjust this pattern as needed
+                #     #pattern_received_response="MESSAGE_RECEIVED"  # Adjust this pattern as needed
+                # )
+                response, received_message = self.message_receiver(
                     local_socket=self.socket,
-                    #pattern_received="!MESSAGE:",  # Adjust this pattern as needed
-                    #pattern_received_response="MESSAGE_RECEIVED"  # Adjust this pattern as needed
+                    # pattern_received="!KEY:",
+                    # pattern_received_response="KEY_RECEIVED",
+                    timeout=5,
+                    decrypt=self.is_encrypted
                 )
                 if response and received_message:
                     # Process the decrypted message
@@ -114,10 +137,16 @@ class Client(SocketInterface):
             
             self.action_control(message)
             
-            response = self.send_message(
-                self.socket, 
-                message
+            # response = self.send_message(
+            #     self.socket, 
+            #     message
+            # )
+
+            response = self.message_sender(
+                local_socket=self.socket,
+                message=message,
             )
+            
             if response != 0:
                 self.logger.error("Message can not be sent!")
     
