@@ -252,23 +252,51 @@ class SocketInterface(ABC):
                         send_pattern,
                         encrypt
                     )
+                    send_pattern_byte_len = len(send_pattern_byte)
+                    if send_pattern_byte_len > self.message_max_byte_length:
+                        raise Exception(
+                            f"Message byte length is too long. Maximum byte length is {self.message_max_byte_length}.")
+                    elif send_pattern_byte_len < self.message_max_byte_length:
+                        message_converted = bytes(send_pattern_byte)
+                        message_converted = message_converted.decode()
+                        message_converted += "\0" * (self.message_max_byte_length - send_pattern_byte_len)
+                        send_pattern_byte = message_converted.encode()
                     local_socket.send(send_pattern_byte)
+                    
+                    
+                    
                     message_byte = self.encrypt_message(
                         message,
                         encrypt
                     )
+                    message_byte_len = len(message_byte)
+                    if message_byte_len > self.message_max_byte_length:
+                        raise Exception(
+                            f"Message byte length is too long. Maximum byte length is {self.message_max_byte_length}.")
+                    elif message_byte_len < self.message_max_byte_length:
+                        message_converted = bytes(message_byte)
+                        message_converted = message_converted.decode()
+                        message_converted += "\0" * (self.message_max_byte_length - message_byte_len)
+                        message_byte = message_converted.encode()
                     local_socket.send(message_byte)
                 except Exception as error:
                     self.logger.error(f"Error message: {error.args, error.__str__()}")
 
                 # Is Received Response
-                response, received_message = self.pattern_receive(
+                # response, received_message = self.pattern_receive(
+                #     local_socket=local_socket,
+                #     pattern=receive_pattern,
+                #     timeout=timeout,
+                #     decrypt=encrypt
+                # )
+                response, received_message = self.message_receive(
                     local_socket=local_socket,
-                    pattern=receive_pattern,
                     timeout=timeout,
+                    sleep_time=0, #float(timeout) * 0.01,
                     decrypt=encrypt
                 )
-                if response:
+                
+                if response and receive_pattern in received_message:
                     # message be sended successfully
                     return 0
 
@@ -295,23 +323,32 @@ class SocketInterface(ABC):
         if pattern_received != "":
             
             # Wait for Pattern
-            self.logger.info(f"receiving {pattern_received}")
-            response, received_message = self.pattern_receive(
+            self.logger.info(f"Receiving Pattern: {pattern_received}")
+            # response, received_message = self.pattern_receive(
+            #     local_socket=local_socket,
+            #     pattern=pattern_received,
+            #     timeout=timeout,
+            #     decrypt=decrypt
+            # )
+            response, received_message = self.message_receive(
                 local_socket=local_socket,
-                pattern=pattern_received,
                 timeout=timeout,
-                decrypt=decrypt
+                sleep_time=0, # float(timeout) * 0.01,
+                decrypt=decrypt,
             )
                 
-            if response:
+            if response and pattern_received in received_message:
                 # Wait for Message
+                self.logger.info(f"Receiving Message...")
                 response, received_message = self.message_receive(
                     local_socket=local_socket,
                     timeout=timeout,
+                    sleep_time=0, #float(timeout) * 0.01,
                     decrypt=decrypt
                 )
                 if response:
                     # Send Response
+                    self.logger.info(f"Sending received response: {pattern_received_response}")
                     response = self.message_sender(
                         local_socket=local_socket,
                         message=pattern_received_response,
@@ -341,7 +378,7 @@ class SocketInterface(ABC):
         return True, message
 
 
-    def message_receive(self, local_socket: socket.socket, timeout: int, decrypt: bool, sleep_time:float=0.1):
+    def message_receive(self, local_socket: socket.socket, timeout: int, decrypt: bool, sleep_time:float=0.01):
         local_buffer = ""
         local_buffer_len = 0
 
@@ -350,7 +387,7 @@ class SocketInterface(ABC):
 
         self.logger.debug("message_receive")
         while end_time - start_time < timeout:
-            print(f"-> BUFFER [{local_buffer_len}]:{local_buffer}", end="\r")
+            # print(f"-> BUFFER [{local_buffer_len}]:{local_buffer}", end="\r")
             # Timeout Control
             end_time = time.time()
             
@@ -367,12 +404,12 @@ class SocketInterface(ABC):
             local_buffer += received_message
             
             if local_buffer_len == self.message_max_byte_length:
-                # self.logger.info("\nPATTERN FOUND")
-                print(f"\nMESSAGE RECEIVED: {local_buffer}")
+                self.logger.debug("Message Received")
+                # print(f"\nMESSAGE RECEIVED: {local_buffer}")
                 return True, local_buffer
             
-        print(f"\nMESSAGE NOT RECEIVED: {local_buffer_len, local_buffer}")
-        # self.logger.warn(f"\nPATTERN NOT FOUND")
+        # print(f"\nMESSAGE NOT RECEIVED: {local_buffer_len, local_buffer}")
+        self.logger.debug(f"MESSAGE NOT RECEIVED: {local_buffer_len, local_buffer}")
         return False, local_buffer
 
 
@@ -388,12 +425,12 @@ class SocketInterface(ABC):
             if sleep_time > 0:
                 time.sleep(sleep_time)
                 
-            print(f"-> BUFFER:{local_buffer}", end="\r")
+            # print(f"-> BUFFER:{local_buffer}", end="\r")
             # Timeout Control
             end_time = time.time()
             if pattern in local_buffer:
-                # self.logger.info("\nPATTERN FOUND")
-                print(f"\nPATTERN FOUND")
+                self.logger.debug("PATTERN FOUND")
+                # print(f"\nPATTERN FOUND")
                 return True, local_buffer
             
             received_message = local_socket.recv(1).decode()
@@ -405,12 +442,9 @@ class SocketInterface(ABC):
             received_message.strip("\0")
             local_buffer += received_message
             
-        print(f"\nPATTERN NOT FOUND")
-        # self.logger.warn(f"\nPATTERN NOT FOUND")
+        # print(f"\nPATTERN NOT FOUND")
+        self.logger.debug(f"\nPATTERN NOT FOUND")
         return False, local_buffer
-
-
-
 
 
     def encrypt_message(self, message:str, encrypt:bool) -> ByteString:

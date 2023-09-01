@@ -6,11 +6,14 @@ import time
 from Libraries.Classes.Socket_Interface_Class import SocketInterface
 
 class Client(SocketInterface):
-    def __init__(self, port: int, username: str, is_encrypted: bool, is_server: bool, init_client=True, timeout_second:int|None= None,logging_name: str = ""):
+    def __init__(self, port: int, username: str, is_encrypted: bool, is_server: bool, init_client=True, message_timeout_second: int=10, socket_timeout_second: int | None = None, logging_name: str = ""):
         super().__init__(port, username, is_encrypted, is_server, logging_name)
-         
+        
+        self.message_timeout_second = message_timeout_second
+        
         if init_client:
-            self.create_socket(is_server=False, timeout_second=timeout_second)
+            self.create_socket(
+                is_server=False, timeout_second=socket_timeout_second)
               
         self.init_threads()
         
@@ -48,7 +51,7 @@ class Client(SocketInterface):
                     local_socket=self.socket,
                     pattern_received="!KEY:",
                     pattern_received_response="KEY_RECEIVED",
-                    timeout=5,
+                    timeout=self.message_timeout_second,
                     decrypt=False
                 )
                 
@@ -74,7 +77,7 @@ class Client(SocketInterface):
                 message = self.username,
                 send_pattern = "!USERNAME:", 
                 receive_pattern = "USERNAME_RECEIVED",
-                timeout=3 # TODO: DEBUG
+                timeout=self.message_timeout_second
             )
             
             if response:
@@ -115,7 +118,7 @@ class Client(SocketInterface):
                     local_socket=self.socket,
                     # pattern_received="!KEY:",
                     # pattern_received_response="KEY_RECEIVED",
-                    timeout=5,
+                    timeout=self.message_timeout_second,
                     decrypt=self.is_encrypted
                 )
                 if response and received_message:
@@ -145,6 +148,7 @@ class Client(SocketInterface):
             response = self.message_sender(
                 local_socket=self.socket,
                 message=message,
+                timeout=self.message_timeout_second
             )
             
             if response != 0:

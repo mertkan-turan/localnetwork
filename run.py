@@ -14,7 +14,7 @@ if __name__ == "__main__":
             is_encrypted=is_encrypted,
             init_server=True,
             listen_number=10,
-            timeout_second=9999,
+            socket_timeout_second=9999,
             logging_name="server"
         )
         #server_object.socket.listen(-1)
@@ -26,7 +26,8 @@ if __name__ == "__main__":
             is_encrypted=is_encrypted,
             is_server=False,
             init_client=True,
-            timeout_second=9999,
+            message_timeout_second=10,
+            socket_timeout_second=9999,
             logging_name="client"
         )
         client_object.connect(ip, port)

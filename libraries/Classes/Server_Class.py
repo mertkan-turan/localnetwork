@@ -12,11 +12,12 @@ from Libraries.Classes.Socket_Interface_Class import SocketInterface
 
 
 class Server(SocketInterface):
-    def __init__(self, port:int, username:str, is_encrypted:bool, init_server:bool=True, timeout_second:int|None= None, listen_number:int=1, logging_name:str=""):
+    def __init__(self, port:int, username:str, is_encrypted:bool, init_server:bool=True, message_timeout_second: int=10, socket_timeout_second:int|None= None, listen_number:int=1, logging_name:str=""):
         super().__init__(port, username, is_encrypted,is_server = True,logging_name=logging_name)  # Call the superclass's init method
 
         # Additional attributes specific to Server
-        self.init_server = init_server    
+        self.init_server = init_server
+        self.message_timeout_second = message_timeout_second
 
         # Logger
         self.logging=self.setup_logger()
@@ -58,7 +59,7 @@ class Server(SocketInterface):
             self.create_socket(
                 is_server = True, 
                 listen_number=listen_number,
-                timeout_second=timeout_second
+                timeout_second=socket_timeout_second
             )
 
         self.init_threads()
@@ -235,7 +236,7 @@ class Server(SocketInterface):
                     message=f"{sender_username}:{message}",
                     # send_pattern="!MESSAGE:",
                     # receive_pattern="MESSAGE_RECEIVED",
-                    timeout=5,
+                    timeout=self.message_timeout_second,
                     encrypt=False
                 )
                 
@@ -261,7 +262,7 @@ class Server(SocketInterface):
                 message=self.switch.decode(),
                 send_pattern="!KEY:",
                 receive_pattern="KEY_RECEIVED",
-                timeout=5,
+                timeout=self.message_timeout_second,
                 encrypt=False
             )
             
@@ -285,7 +286,7 @@ class Server(SocketInterface):
             local_socket=self.socket,
             pattern_received="!USERNAME:",
             pattern_received_response="USERNAME_RECEIVED",
-            timeout=5,
+            timeout=self.message_timeout_second,
             decrypt=True
         )
         
@@ -307,7 +308,7 @@ class Server(SocketInterface):
 
             response, message = self.message_receiver(
                 local_socket=connection,
-                timeout=5,
+                timeout=self.message_timeout_second,
                 decrypt=True
             )
             self.logging.info(f"MESSAGE | {username}: [{response}] {message}")
