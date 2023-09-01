@@ -55,13 +55,14 @@ class SocketInterface(ABC):
     def create_socket(self,is_server:bool,listen_number = -1, timeout_second:int|None = None):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.socket.settimeout(timeout_second)
-        #self.socket.setblocking(False)
 
         if is_server == True:
             self.socket.bind((self.ip, self.port))
             if listen_number != -1:
                 self.socket.listen(listen_number)
+        
+        self.socket.settimeout(timeout_second)
+        #self.socket.setblocking(False)
   
     
     def configure_logger(self):
@@ -82,7 +83,7 @@ class SocketInterface(ABC):
         self.logger.addHandler(stream_handler)
 
     
-    def send_message(self, local_socket, message:str, send_pattern:str="", receive_pattern:str="", timeout=3, encrypt=True):
+    def __send_message(self, local_socket, message:str, send_pattern:str="", receive_pattern:str="", timeout=3, encrypt=True):
         pattern_byte_len = len(send_pattern.encode())
         
         if pattern_byte_len > self.message_max_byte_length:
@@ -104,23 +105,16 @@ class SocketInterface(ABC):
                         send_pattern, 
                         encrypt
                     )
-                    local_socket.send(send_pattern_byte)
+                    local_socket.sendall(send_pattern_byte)
 
                     message_byte = self.encrypt_message(
                         message,
                         encrypt
                     )
-                    message_byte_len = len(message_byte)
-                    if message_byte_len > self.message_max_byte_length:
-                        raise Exception(
-                            f"Message byte length is too long. Maximum byte length is {self.message_max_byte_length}.")
-                    elif message_byte_len < self.message_max_byte_length:
-                        message_converted = bytes(message_byte)
-                        message_converted = message_converted.decode()
-                        message_converted += "\0" * (self.message_max_byte_length - message_byte_len)
-                        message_byte = message_converted.encode()
+                    message_byte = self.packaging_bytes(message_byte)
+
                         
-                    local_socket.send(message_byte)
+                    local_socket.sendall(message_byte)
                     
                 except Exception as error:
                     self.logger.error(f"Error message: {error.args, error.__str__()}")
@@ -154,14 +148,14 @@ class SocketInterface(ABC):
                     send_pattern,
                     encrypt
                 )
-                local_socket.send(send_message_byte)
+                local_socket.sendall(send_message_byte)
                 return 0
             except Exception as error:
                 self.logger.error(f"Error message: {error.args, error.__str__()}")
                 return -1
 
 
-    def receive_messages(self, local_socket:socket.socket, pattern_received="", pattern_received_response="", timeout:int=3, decrypt:bool=True) -> tuple[bool, str]:
+    def __receive_messages(self, local_socket:socket.socket, pattern_received="", pattern_received_response="", timeout:int=3, decrypt:bool=True) -> tuple[bool, str]:
         # If pattern received is not empty, then we will wait for the pattern
         if pattern_received != "":
             start_time = time.time()
@@ -253,17 +247,9 @@ class SocketInterface(ABC):
                         send_pattern,
                         encrypt
                     )
-                    send_pattern_byte_len = len(send_pattern_byte)
-                    if send_pattern_byte_len > self.message_max_byte_length:
-                        raise Exception(
-                            f"Message byte length is too long. Maximum byte length is {self.message_max_byte_length}.")
-                    elif send_pattern_byte_len < self.message_max_byte_length:
-                        message_converted = bytes(send_pattern_byte)
-                        message_converted = message_converted.decode()
-                        message_converted += "\0" * (self.message_max_byte_length - send_pattern_byte_len)
-                        send_pattern_byte = message_converted.encode()
-                        
-                    local_socket.send(send_pattern_byte)
+                    send_pattern_byte = self.packaging_bytes(send_pattern_byte)
+                    
+                    local_socket.sendall(send_pattern_byte)
                     self.logger.info(f"Pattern '{send_pattern}' sent as '{send_pattern_byte}'.")
 
                     self.logger.info(f"Sending message: {message}")
@@ -271,29 +257,14 @@ class SocketInterface(ABC):
                         message,
                         encrypt
                     )
-                    message_byte_len = len(message_byte)
-                    if message_byte_len > self.message_max_byte_length:
-                        raise Exception(
-                            f"Message byte length is too long. Maximum byte length is {self.message_max_byte_length}.")
-                    elif message_byte_len < self.message_max_byte_length:
-                        message_converted = bytes(message_byte)
-                        message_converted = message_converted.decode()
-                        message_converted += "\0" * (self.message_max_byte_length - message_byte_len)
-                        message_byte = message_converted.encode()
-                        
-                    local_socket.send(message_byte)
+                    message_byte = self.packaging_bytes(message_byte)
+                            
+                    local_socket.sendall(message_byte)
                     self.logger.info(f"Message '{message}' sent as '{message_byte}'.")
 
                 except Exception as error:
                     self.logger.error(f"Error message: {error.args, error.__str__()}")
 
-                # Is Received Response
-                # response, received_message = self.pattern_receive(
-                #     local_socket=local_socket,
-                #     pattern=receive_pattern,
-                #     timeout=timeout,
-                #     decrypt=encrypt
-                # )
                 self.logger.info(f"Receiving response: {receive_pattern}")
                 response, received_message = self.message_receive(
                     local_socket=local_socket,
@@ -308,16 +279,18 @@ class SocketInterface(ABC):
                     return 0
                 else:
                     self.logger.error(f"Pattern '{receive_pattern}' can not be received as [{response}]'{received_message}'.")
-
             # If timeout occurred, message NOT be sended
             return -1
         else:
             try:
-                send_message_byte = self.encrypt_message(
-                    send_pattern,
+                message_byte = self.encrypt_message(
+                    message,
                     encrypt
                 )
-                local_socket.send(send_message_byte)
+                message_byte = self.packaging_bytes(message_byte)
+                
+                self.logger.info(f"Sending without pattern: {message} as {message_byte}")
+                local_socket.sendall(message_byte)
                 return 0
             except Exception as error:
                 self.logger.error(
@@ -361,10 +334,10 @@ class SocketInterface(ABC):
                     response = self.message_sender(
                         local_socket=local_socket,
                         message=pattern_received_response,
+                        encrypt=decrypt
                     )
                     if response != 0:
                         self.logger.error(f"Response Message '{pattern_received_response}' can not be sent!")
-                    
                     return True, received_message
                 else:
                     self.logger.error(f"Message can not be received!")
@@ -375,14 +348,15 @@ class SocketInterface(ABC):
             return False, self.__timeout_pattern
 
         else:
-            message = ""
-            message = local_socket.recv(self.message_max_byte_length).decode()
-            message = message.strip("\0")
-            # Receive message without pattern
-            message = self.decrypt_message(
-                message,
-                decrypt
+            response, message = self.message_receive(
+                local_socket=local_socket,
+                timeout=timeout,
+                sleep_time=0, # float(timeout) * 0.01,
+                decrypt=decrypt,
             )
+            if not response:
+                return False, message
+                
 
         return True, message
 
@@ -396,7 +370,7 @@ class SocketInterface(ABC):
 
         self.logger.debug("message_receive")
         while end_time - start_time < timeout:
-            # print(f"-> BUFFER [{local_buffer_len}]:{local_buffer}", end="\r")
+            print(f"-> [{end_time - start_time}] BUFFER [{local_buffer_len}]:{local_buffer}", end="\r")
             # Timeout Control
             end_time = time.time()
             
@@ -414,17 +388,17 @@ class SocketInterface(ABC):
             
             if local_buffer_len == self.message_max_byte_length:
                 local_buffer = local_buffer.strip("\0")
-                self.logger.debug(f"Message Received: {local_buffer_len, local_buffer}")
+                self.logger.debug(f"Message Received [{end_time - start_time}]: {local_buffer_len, local_buffer}")
                 # print(f"\nMESSAGE RECEIVED: {local_buffer}")
                 return True, local_buffer
             
         # print(f"\nMESSAGE NOT RECEIVED: {local_buffer_len, local_buffer}")
-        self.logger.debug(f"MESSAGE NOT RECEIVED: {local_buffer_len, local_buffer}")
+        self.logger.debug(f"MESSAGE NOT RECEIVED [{end_time - start_time}]: {local_buffer_len, local_buffer}")
         return False, local_buffer
 
 
 
-    def pattern_receive(self, local_socket: socket.socket, pattern:str, timeout:int, decrypt:bool, sleep_time:float=0.1):
+    def __pattern_receive(self, local_socket: socket.socket, pattern:str, timeout:int, decrypt:bool, sleep_time:float=0.1):
         local_buffer = ""
         start_time = time.time()
         end_time = time.time()
@@ -469,3 +443,14 @@ class SocketInterface(ABC):
             message = self.crypto_module.decrypt_message(message)
         return message
 
+    def packaging_bytes(self, message_byte):
+        message_byte_len = len(message_byte)
+        if message_byte_len > self.message_max_byte_length:
+            raise Exception(
+                f"Message byte length is too long. Maximum byte length is {self.message_max_byte_length}.")
+        elif message_byte_len < self.message_max_byte_length:
+            message_converted = bytes(message_byte)
+            message_converted = message_converted.decode()
+            message_converted += "\0" * (self.message_max_byte_length - message_byte_len)
+            message_byte = message_converted.encode()
+            return message_byte

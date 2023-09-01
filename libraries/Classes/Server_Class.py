@@ -150,8 +150,9 @@ class Server(SocketInterface):
                 if self.socket:
                     try:
                         conn, addr = self.socket.accept()
+                        # conn.setblocking(False)
                     except Exception as error:
-                        self.logging.error(f"Error message: {error.args, error.__str__()}")
+                        self.logging.error(f"Connection Accept Error message: {error.args, error.__str__()}")
                         continue
                     
                     if conn is not None:
