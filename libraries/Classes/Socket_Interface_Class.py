@@ -341,7 +341,7 @@ class SocketInterface(ABC):
         return True, message
 
 
-    def message_receive(self, local_socket: socket.socket, timeout: int, decrypt: bool):
+    def message_receive(self, local_socket: socket.socket, timeout: int, decrypt: bool, sleep_time:float=0.1):
         local_buffer = ""
         local_buffer_len = 0
 
@@ -353,6 +353,9 @@ class SocketInterface(ABC):
             print(f"-> BUFFER [{local_buffer_len}]:{local_buffer}", end="\r")
             # Timeout Control
             end_time = time.time()
+            
+            if sleep_time > 0:
+                time.sleep(sleep_time)
             
             received_message = local_socket.recv(1).decode()
             local_buffer_len += 1
@@ -374,13 +377,17 @@ class SocketInterface(ABC):
 
 
 
-    def pattern_receive(self, local_socket: socket.socket, pattern:str, timeout:int, decrypt:bool):
+    def pattern_receive(self, local_socket: socket.socket, pattern:str, timeout:int, decrypt:bool, sleep_time:float=0.1):
         local_buffer = ""
         start_time = time.time()
         end_time = time.time()
 
         self.logger.debug("pattern_receive")
         while end_time - start_time < timeout:
+            
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+                
             print(f"-> BUFFER:{local_buffer}", end="\r")
             # Timeout Control
             end_time = time.time()
