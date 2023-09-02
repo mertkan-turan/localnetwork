@@ -7,10 +7,10 @@ import threading
 class Crypto():
     def __init__(self):
         # self.key = self.create_key()
-        self.key = ""
+        self.key:str|bytes = ""
         
         # self.cipher_suite = self.create_cipher_suite()
-        self.cipher_suite = None
+        self.cipher_suite:Fernet
   
     def create_key(self, write_to_file=False):
         self.key = Fernet.generate_key()
@@ -52,4 +52,48 @@ class Crypto():
 
 
 if __name__ == "__main__" :
-      print(threading.active_count())
+    crypto = Crypto()
+    user_response = input("Create new key? (y/n): ")
+    
+    if user_response == "y":
+        crypto.create_key(write_to_file=True)
+    else:
+        user_response = input("Load from key file (y/n): ")
+        if user_response == "y":
+            crypto.set_key(crypto.get_key_file())
+        else:
+            user_response = input("Key: ")
+            crypto.set_key(user_response.encode())
+            
+    print(f"Key: {crypto.key}")
+
+    crypto.create_cipher_suite()
+
+    is_decrypt = input("Decrypt? (y/n): ")
+    encoding = input("Encoding [default is 'utf-8']: ")
+    if encoding == "":
+        encoding = "utf-8"
+
+    print("Exit with ':qw'")
+    while True:
+        user_response = input("Message: ")
+        
+        # Actions
+        if user_response == ":qw":
+            print(f"Exiting...")
+            break
+        
+        # Encryption / Decryption
+
+        print(
+            f"user_response [str_len: {len(user_response)} - byte_len: {len(user_response.encode(encoding))}]: {user_response}"
+        )
+        if is_decrypt == "y":
+            decrypted = crypto.decrypt_message(user_response)
+            print(f"Decrypted [str_len: {len(decrypted)} - byte_len: {len(decrypted.encode(encoding))}]: {decrypted}")
+
+        else:
+            encrypted = crypto.encrypt_message(user_response)
+            print(
+                f"Encrypted [byte_len: {len(encrypted)} - str_len: {len(encrypted.decode(encoding))}]: {encrypted}"
+            )
