@@ -1,3 +1,4 @@
+import random
 import socket
 import logging
 import sys
@@ -156,7 +157,8 @@ class Server(SocketInterface):
                         continue
                     
                     if conn is not None:
-                        response, username = self.accept_protocol(conn)
+                         #response, username = self.accept_protocol(conn)
+                        response, username = True, f"rastgele_biri_{random.randint(0, 99999999)}"
                         
                         if response:
                             temp_conn = self.__active_connection_template.copy()
@@ -261,8 +263,8 @@ class Server(SocketInterface):
             return self.message_sender(
                 local_socket=local_socket,
                 message=self.switch.decode(),
-                send_pattern="!KEY:",
-                receive_pattern="KEY_RECEIVED",
+                # send_pattern="!KEY:",
+                # receive_pattern="KEY_RECEIVED",
                 timeout=self.message_timeout_second,
                 encrypt=False
             )
@@ -285,10 +287,10 @@ class Server(SocketInterface):
         # )
         response, username = self.message_receiver(
             local_socket=self.socket,
-            pattern_received="!USERNAME:",
-            pattern_received_response="USERNAME_RECEIVED",
+            # pattern_received="!USERNAME:",
+            # pattern_received_response="USERNAME_RECEIVED",
             timeout=self.message_timeout_second,
-            decrypt=True
+            decrypt=False
         )
         
         if response:
@@ -310,7 +312,7 @@ class Server(SocketInterface):
             response, message = self.message_receiver(
                 local_socket=connection,
                 timeout=self.message_timeout_second,
-                decrypt=True
+                decrypt=False
             )
             self.logging.info(f"MESSAGE | {username}: [{response}] {message}")
             

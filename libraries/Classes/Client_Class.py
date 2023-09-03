@@ -72,16 +72,16 @@ class Client(SocketInterface):
             #         timeout=3 # TODO: DEBUG
             # )
             
-            response = self.message_sender(
+            """response = self.message_sender(
                 local_socket = self.socket, 
                 message = self.username,
-                send_pattern = "!USERNAME:", 
-                receive_pattern = "USERNAME_RECEIVED",
+                # send_pattern = "!USERNAME:", 
+                # receive_pattern = "USERNAME_RECEIVED",
                 timeout=self.message_timeout_second
             )
             
             if response:
-                self.logger.info(f"Username sent: {response}")
+                self.logger.info(f"Username sent: {response}")"""
             
             self.logger.info("Successfully connected to server: %s:%s", ip_address, port)
             self.logger.info("If you want to exit the program, please write exit!!")
@@ -103,6 +103,8 @@ class Client(SocketInterface):
             self.logger.error(f"Exception: {e}")
             return -1
     
+        while True:
+            time.sleep(15)
         return 0
     
     def task_receiver(self):

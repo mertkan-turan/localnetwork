@@ -377,7 +377,7 @@ class SocketInterface(ABC):
             if sleep_time > 0:
                 time.sleep(sleep_time)
             
-            received_message = local_socket.recv(1).decode()
+            received_message = local_socket.recv(1).decode("utf-8")
             local_buffer_len += 1
             if decrypt:
                 received_message = self.decrypt_message(
