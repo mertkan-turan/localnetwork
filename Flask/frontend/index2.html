@@ -1,0 +1,57 @@
+<!--
+
+Follow me on
+Dribbble: https://dribbble.com/supahfunk
+Twitter: https://twitter.com/supahfunk
+Codepen: https://codepen.io/supah/
+
+It's just a concept, a fake chat to design a new daily UI for direct messaging.
+Hope you like it :)
+
+-->
+
+{% extends 'base.html' %}
+
+{% block title %}
+Welcome to ChitChat
+{% endblock %}
+
+{% block content %}
+
+
+
+        <h1>CHITCHAT</h1>
+        <h2>SocketProgramming</h2>
+        <figure class="avatar">
+            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/156381/profile/profile-80.jpg" />
+        </figure>
+    </div>
+    <div class="messages">
+        <div class="messages-content"></div>
+    </div>
+    <div class="message-box">
+        <textarea type="text" class="message-input" placeholder="Type message..."></textarea>
+        <button type="submit" class="message-submit">Send</button>
+    </div>
+
+</div>
+<div class="bg"></div>
+
+<div class="code-block">
+    <h2>Broadcast Log:</h2>
+    <pre>
+        <div class="chat-title">
+            <div iv id="sse-data"></div>
+        </div>
+        <script>
+            var logDataDiv = document.getElementById('sse-data');
+            var eventSource = new EventSource('/stream_log');
+
+            eventSource.onmessage = function (event) {
+                // Append new log data to the existing content
+                logDataDiv.innerHTML += event.data + '<br>';
+            };
+        </script>
+    </pre>
+</div>
+{% endblock %}
