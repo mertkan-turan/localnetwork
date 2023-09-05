@@ -1,6 +1,6 @@
 from Libraries.Tools.network_tools import get_ip
-from MSB_Classes.Client_Class import Client
-from MSB_Classes.Server_Class import Server
+from Classes.Client_Class import Client
+from Classes.Server_Class import Server
 
 if __name__ == "__main__":
     

@@ -42,6 +42,29 @@ def read_configuration(file_path = "settings.conf"):
     
     return config
 
+def load_json(file_path = "default.json"):
+    app_root_path = os.path.dirname(os.path.abspath(__file__))
+    with open(app_root_path + "/" + file_path, 'r') as json_file:
+        config = json.load(json_file)
+    
+    return config
+
+def write_json(obj, file_path="default.json", overwrite=False):
+    app_root_path = os.path.dirname(os.path.abspath(__file__))
+    # "/".join(__file__.split("\\")[:-1])
+
+    if overwrite:
+        with open(app_root_path + "/" + file_path, 'w') as json_file:
+             json.dump(obj,json_file) 
+    else:
+        config_path_object = Path(app_root_path + "/" + file_path)
+        
+        if config_path_object.is_file():
+            pass
+        else:
+            with open(app_root_path + "/" + file_path, 'w') as json_file:
+                json.dump(obj,json_file)
+            
     
 
     
