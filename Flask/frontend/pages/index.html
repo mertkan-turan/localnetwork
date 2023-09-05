@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+
+{% extends 'base.html' %}
+
+{% block title %}
+Welcome to ChitChat
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="chat">
+  <div class="chat-title">
+    <h1>Fabio Ottaviani</h1>
+    <h2>Supah</h2>
+    <figure class="avatar">
+      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/156381/profile/profile-80.jpg" /></figure>
+  </div>
+  <div class="messages">
+    <div id="sse-data" class="messages-content"></div>
+  </div>
+  <div class="message-box">
+    <textarea type="text" class="message-input" placeholder="Type message..."></textarea>
+    <button type="submit" class="message-submit">Send</button>
+  </div>
+
+</div>
+<div class="bg"></div>
+
+{% endblock %}

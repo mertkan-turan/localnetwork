@@ -1,6 +1,6 @@
 from Libraries.Tools import cli_tools
-from Libraries.Classes import Client_Class
-from Libraries.Classes import Server_Class
+from Libraries.others import Client2_Class
+from Libraries.others import Server2_Class
 
 
 
@@ -8,7 +8,7 @@ if __name__ == "__main__":
     is_server,is_encrypted, (ip, port, username) = cli_tools.main_actions()
     
     if is_server == True :
-        server_object = Server_Class.Server(
+        server_object = Server2_Class.Server(
             port=int(port),
             username=username, 
             is_encrypted=is_encrypted,
@@ -20,7 +20,7 @@ if __name__ == "__main__":
         #server_object.socket.listen(-1)
         server_object.server_serve()
     else:
-        client_object = Client_Class.Client(
+        client_object = Client2_Class.Client(
             port=int(port),
             username=username,
             is_encrypted=is_encrypted,
