@@ -1,6 +1,6 @@
 .logo{
-    width: auto;
-    height: 125px;
+    width: 200px;
+    height: auto;
     background: transparent;
     padding: 0 20px 0px 20px;
 }
@@ -15,7 +15,7 @@
 }
 
 .navbar{
-    background: rgba(0, 0, 0, 0.504);
+    background: rgba #888;
     display: flex;
     width: 100%;
     align-items: center;
@@ -30,7 +30,7 @@
 }
 
 .navbar-btn{
-    background: #0000007a;
+
     padding: 10px;
     border-radius: 10px;
     color: white;

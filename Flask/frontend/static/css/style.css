@@ -7,6 +7,7 @@ html {
 }
 body {width: 100%;
   height: 100%;
+  background-image: url('background.jpg');
   margin: 0;
   --color2-dark:rgb (0, 0, 0, 0.5);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -15,9 +16,23 @@ body {width: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+h2 {
+  color:#ffffff;
+  display: block;
+  font-size: 1.5em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+label {
+  color:#ffffff;
+  cursor: default;
+}
 .background {
-  background: url(https://i.gifer.com/LSsT.gif);
+  background-image: url('background.jpg');
+  background-size: cover;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -35,7 +50,7 @@ body {width: 100%;
 header {
   background: var(--color1);
   /* Add your desired background color here */
-  color: var(--light);
+  color: rgb(254, 252, 252);
   display: flex;
     align-items: center;
     justify-content: space-between;
@@ -56,7 +71,10 @@ header {
   }
 
   & a {
-    color: var(--light);
+    background: #0000007a;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
     text-decoration: none;
     font-size: 1.1rem;
     font-weight: 500;
@@ -91,11 +109,16 @@ form {
 
     &[type="submit"] {
       -webkit-appearance: none;
-      background: var(--color2);
-      color: rgba(0, 0, 0, 0.5);
+      background: #0000007a;
+      color: white;
+      padding: 10px;
+      border-radius: 10px;
       border: 2px solid var(--color2-dark);
       font-weight: bold;
       transition: 0.3s;
+      
+            
+            
 
       &:hover,
       &:focus {
@@ -133,7 +156,7 @@ form {
 }
 
 label[for="toggle"] {
-  color: var(--dark);
+  color: rgba(246, 239, 239, 0.978);
   font-weight: 500;
   padding-inline-start: 0.5rem;
 
@@ -146,12 +169,15 @@ label[for="toggle"] {
   display: none;
 
   &+aside {
-    box-sizing: border-box;
-    transition: 0.5s;
-    height: 100%;
-    position: absolute;
-    left: -100vw;
-  }
+      box-sizing: border-box;
+      transition: 0.5s;
+      height: 100%;
+      position: absolute;
+      left: -100vw;
+      transform: translateY(-20px) translateX(-10px);
+      /* Scroll up by 20 pixels (adjust as needed) */
+  
+    }
 
   &:checked+aside {
     left: 0;
@@ -194,7 +220,8 @@ aside.chat-rooms {
   }
 
   & a {
-    color: var(--light);
+    color: rgba(247, 246, 246, 0.978);
+    background-color: rgb(143 143 143 / 75%);
     font-weight: bold;
     text-decoration: none;
     display: block;
@@ -214,7 +241,7 @@ aside.chat-rooms {
   margin-bottom: 1rem;
 
   & label {
-    color: var(--light);
+    color: rgb(254, 252, 252);
     grid-column: 1 / span 2;
   }
 }
@@ -240,6 +267,7 @@ main .prompt {
 .messages-container {
   margin: 0;
   padding: 1rem 2rem;
+  transform: translateX(100px);
   display: grid;
   align-items: center;
   align-content: flex-start;
@@ -251,13 +279,13 @@ main .prompt {
   & li {
     display: grid;
     justify-items: flex-start;
-    color: var(--light);
+    color: rgb(254, 252, 252);
     max-width: 75%;
 
     & .sender,
     .time-stamp {
       justify-self: flex-start;
-      color: var(--grey);
+      color: rgb(254, 252, 252);
       font-size: 0.8rem;
       font-weight: 300;
     }
@@ -305,5 +333,31 @@ main .prompt {
   display: grid;
   grid-template: 1fr / 5fr 1fr;
   align-items: center;
+  width: 75%;
+  transform: translateX(83px);
 }
 
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+  overflow: auto;
+  max-height: 400px;
+  /* Adjust the maximum height as needed */
+}

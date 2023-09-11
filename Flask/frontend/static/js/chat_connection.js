@@ -49,3 +49,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+//SIGN  UP   INFORMATION GET
+// Assuming you have JavaScript code to collect the username and port data from the signup form
+document.getElementById('signupForm').addEventListener('SignUp', function (event) {
+    event.preventDefault(); // Prevent the default form submission
+    console.log('Form submitted'); // Add this line
+    var username = document.getElementById('signup-username').value;
+    var port = document.getElementById('signup-port').value;
+
+    // Create a JSON object with the data
+    var data = {
+        'username': username,
+        'port': port
+    };
+
+    // Send the data to the server
+    fetch('/save_data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => response.json())
+        .then(result => {
+            if (result.error) {
+                console.error('Error:', result.error);
+            } else {
+                console.log('Data saved successfully:', result.message);
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+});
+
+///////GET INFO FROM MESSAGE BUTTON
+
+

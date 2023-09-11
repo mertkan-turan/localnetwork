@@ -5,11 +5,11 @@
   <nav class="navbar">
     <img class="logo" src="{{ url_for('static', filename='chitchat.png') }}" alt="Chatrooms Image">
     <ul class="navbar-horizontal-ul">
-      <li class="navbar-horizontal-li margin-5px navbar-btn">
-        <a href="/" class="btn-text">menu1</a>
+      <li class="navbar-horizontal-li margin-5px navbar-btn"></li>
+        <a href="javascript:void(0);" onclick="openLoginPopup();" class="btn-text">Login</a>
       </li>
       <li class="navbar-horizontal-li margin-5px navbar-btn">
-        <a href="/" class="btn-text">menu2</a>
+        <a href="javascript:void(0);" onclick="openSignupPopup();" class="btn-text">Sign Up</a>
       </li>
     </ul>
   </nav>
@@ -31,13 +31,99 @@
     </ul>
   </aside>
   <main class="chat">
-    <ul class="messages-container square-message" class="square-message" id="log-content">
-      <!-- Messages content here -->
-    </ul>
-    <form class="new-message">
-      <input type="text" placeholder="message..." value="">
-      <input type="submit" value="Send">
-    </form>
+ 
+      <div class="chat-container">
+        <ul class="messages-container scrollable square-message" class="square-message" id="log-content">
+          <!-- Messages content here -->
+        </ul>
+        <form class="new-message">
+          <input type="text" id="message-input" placeholder="Enter your message">
+          <button type="button" onclick="sendMessage()">Send</button>
+        </form>
+      </div>
+
   </main>
 </section>
+
+
+<script>
+  function openLoginPopup() {
+    // Define the URL for your login page
+    var loginUrl = '/login'; // Replace with the actual URL
+
+    // Define the window size and options
+    var width = 700; // Adjust the width as needed
+    var height = 150; // Adjust the height as needed
+    var left = (screen.width - width) / 2;
+    var top = (screen.height - height) / 2;
+    var windowOptions = 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top;
+
+    // Open the login popup window
+    var loginPopup = window.open(loginUrl, 'LoginPopup', windowOptions);
+
+    // Focus the popup window (optional)
+    if (loginPopup) {
+      loginPopup.focus();
+    }
+    // Handle data passed from the popup
+        window.addEventListener('message', function (event) {
+          if (event.data && event.data.username && event.data.port) {
+            var username = event.data.username;
+            var port = event.data.port;
+            // Use the username and port data as needed in the main window
+            console.log('Received data from popup: Username:', username, 'Port:', port);
+          }
+        });
+      }
+    </script>
+
+   <!-- JavaScript for Sign Up Popup -->
+    <script>
+      function openSignupPopup() {
+        // Define the URL for your signup page
+        var signupUrl = '/signup'; // Replace with the actual URL for signup
+        // Define the window size and options
+        var width = 700; // Adjust the width as needed
+        var height = 150; // Adjust the height as needed
+        var left = (screen.width - width) / 2;
+        var top = (screen.height - height) / 2;
+        var windowOptions = 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top;
+
+        // Open the signup popup window
+        var signupPopup = window.open(signupUrl, 'SignupPopup', windowOptions);
+
+        // Focus the popup window (optional)
+        if (signupPopup) {
+        signupPopup.focus();
+        }
+
+        // Handle data passed from the signup popup (if needed)
+        window.addEventListener('message', function (event) {
+          if (event.data && event.data.signupData) {
+            var signupData = event.data.signupData;
+            // Use the signup data as needed in the main window
+            console.log('Received data from signup popup:', signupData);
+          }
+        });
+      }
+    </script>
+
+
+
+    <script src="/path/to/socket.io.js"></script>
+    <script>
+      var socket = io.connect('server_url');
+
+      function sendMessage() {
+        var messageInput = document.getElementById('message-input');
+        var message = messageInput.value;
+
+        // Send the message to the backend using WebSocket
+        socket.emit('message', message);
+
+        // Clear the input field
+        messageInput.value = '';
+      }
+    </script>
 {% endblock %}
+

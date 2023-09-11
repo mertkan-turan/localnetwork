@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Add your login page styles and scripts as needed -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+</head>
+
+<body>
+    <h2>Login Page</h2>
+    <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="port">Port:</label>
+        <input type="text" id="port" name="port" required>
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        var loginForm = document.getElementById('loginForm');
+
+        loginForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting
+
+            // Get the username and port values from the form
+            var username = document.getElementById('username').value;
+            var port = document.getElementById('port').value;
+
+            // Send the data back to the parent window
+            window.opener.postMessage({ username: username, port: port }, '*');
+            window.close(); // Close the popup window
+        });
+    </script>
+</body>
+
+</html>

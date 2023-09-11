@@ -25,7 +25,7 @@ if __name__ == "__main__":
         )
         server.server_serve()
     else:
-        client = Client(
+        client =  Client(
             username="socket_client",
             is_encrypted=is_encrypted,
             ip=get_ip(),

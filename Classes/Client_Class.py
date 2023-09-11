@@ -1,5 +1,6 @@
 import threading
 import time
+import socket
 from Classes.Socket_Interface_Class import COMMUNICATION_SIGNATURE, SocketInterface
 
 
@@ -14,7 +15,8 @@ class Client(SocketInterface):
         self.thread_connection: threading.Thread
 
         self.ip = ip
-
+        self.port = port  # The port where the client listens for incoming data
+        
         self.create_socket(
             is_server=False,
         )
@@ -76,7 +78,21 @@ class Client(SocketInterface):
             self.logger.info("Client closed.")
             exit(1)
 
+    def send_message(self, message):
+        # Implement the logic to send the message here
+        # For example, you might use sockets or another communication method
+        # Replace this with your actual implementation
+        print(f"Sending message to {self.ip}:{self.port}: {message}")
+    def receive_data(self):
+        # Create a server socket to listen for incoming data
+        listener_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        listener_socket.bind(("0.0.0.0", self.port))
+        self.logger.info(f"Client is listening on port {self.port}")
 
+        while True:
+            data, addr = listener_socket.recvfrom(1024)  # Adjust buffer size as needed
+            self.logger.info(f"Received data from {addr}: {data.decode('utf-8')}")
+        
     def broadcast_receiver(self):
         while True:
             try:
